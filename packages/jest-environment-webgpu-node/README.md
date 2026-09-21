@@ -63,8 +63,9 @@ const { width, height, data } = await canvas.readPixels();
 Import `jest-environment-webgpu-node/globals` in a `.d.ts` (or add it to `types` in `tsconfig.json`) to get
 TypeScript types for the global `createCanvas`.
 
-## ESM-only libraries
+## ESM and CommonJS
 
-Node loads Jest test environment modules from the host realm, so this package needs no CJS build. Test files
-themselves only need `NODE_OPTIONS=--experimental-vm-modules` when they import ESM-only libraries, such as
-`three/webgpu`.
+This package ships both an ESM and a CommonJS build, so `require('jest-environment-webgpu-node')`
+works from a plain CommonJS test file, and `testEnvironment: 'jest-environment-webgpu-node'`
+resolves the same way either way. `NODE_OPTIONS=--experimental-vm-modules` is only needed when a
+test file itself imports an ESM-only library, such as `three/webgpu`.

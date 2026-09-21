@@ -1,0 +1,62 @@
+{
+  "name": "jest-environment-webgpu-node",
+  "version": "0.1.0",
+  "description": "Jest environment that provides real headless WebGPU (Dawn via the webgpu package) in Node",
+  "keywords": [
+    "dawn",
+    "headless",
+    "jest",
+    "jest-environment",
+    "testing",
+    "webgpu"
+  ],
+  "homepage": "https://github.com/bhouston/jest-gpu#readme",
+  "bugs": {
+    "url": "https://github.com/bhouston/jest-gpu/issues"
+  },
+  "license": "MIT",
+  "author": "Ben Houston <ben@ben3d.ca> (https://ben3d.ca)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhouston/jest-gpu.git",
+    "directory": "packages/jest-environment-webgpu-node"
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.js.map",
+    "dist/**/*.d.ts",
+    "dist/**/*.d.ts.map",
+    "src/globals.d.ts",
+    "CHANGELOG.md"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./globals": {
+      "types": "./src/globals.d.ts"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "tsc": "tsc"
+  },
+  "dependencies": {
+    "@webgpu/types": "^0.1.72",
+    "webgpu": "^0.6.1"
+  },
+  "peerDependencies": {
+    "jest": ">=29 <31",
+    "jest-environment-node": ">=29 <31"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

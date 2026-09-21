@@ -52,7 +52,7 @@
       "oxfmt",
       "oxlint --fix"
     ],
-    "*.{json,md,yml,yaml}": "oxfmt"
+    "*.{json,md,yml,yaml}": "oxfmt --no-error-on-unmatched-pattern"
   },
   "engines": {
     "node": ">=22.12.0"

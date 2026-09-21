@@ -69,3 +69,11 @@ This package ships both an ESM and a CommonJS build, so `require('jest-environme
 works from a plain CommonJS test file, and `testEnvironment: 'jest-environment-webgpu-node'`
 resolves the same way either way. `NODE_OPTIONS=--experimental-vm-modules` is only needed when a
 test file itself imports an ESM-only library, such as `three/webgpu`.
+
+## Author
+
+Created by [Ben Houston](https://ben3d.ca) and sponsored by [Land of Assets](https://landofassets.com).
+
+## License
+
+MIT

@@ -128,6 +128,10 @@ pnpm test:coverage
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the branch, commit and release workflow.
 
+## Author
+
+Created by [Ben Houston](https://ben3d.ca) and sponsored by [Land of Assets](https://landofassets.com).
+
 ## License
 
 MIT

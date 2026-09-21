@@ -12,7 +12,7 @@
   "scripts": {
     "prepare": "husky",
     "build": "pnpm -r --filter './packages/*' build",
-    "tsc": "pnpm -r tsc",
+    "tsc": "pnpm build && pnpm -r tsc",
     "test": "pnpm build && NODE_OPTIONS=--experimental-vm-modules jest",
     "test:coverage": "pnpm build && NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",

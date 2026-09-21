@@ -1,3 +1,4 @@
+import { getDisplayInfo } from '@onirenaud/node-webgl';
 import { TestEnvironment } from 'jest-environment-node';
 import { describe, expect, it, jest } from '@jest/globals';
 import { fileURLToPath } from 'node:url';
@@ -231,10 +232,26 @@ describe('WebglEnvironment', () => {
     expect(callback).not.toHaveBeenCalled();
   });
 
-  it('rejects conflicting native initialization options in one worker', async () => {
-    const initialized = makeEnv({ api: 'auto' });
-    expect(() => makeEnv({ api: 'gles' })).toThrow('cannot switch this Jest worker');
-    await initialized.teardown();
+  it('rejects options that disagree with the display already initialized in this worker', async () => {
+    // Earlier tests created contexts, so the display exists even though no environment passed options.
+    const display = getDisplayInfo()!;
+    expect(display).toBeTruthy();
+    const otherBackend = display.backend === 'null' ? 'swiftshader' : 'null';
+    const otherApi = display.api === 'gles' ? 'gl' : 'gles';
+    expect(() => makeEnv({ backend: otherBackend })).toThrow('cannot switch this Jest worker');
+    expect(() => makeEnv({ api: otherApi })).toThrow('cannot switch this Jest worker');
+    expect(getDisplayInfo()).toBe(display);
+  });
+
+  it('accepts options that match the initialized display, and the platform defaults', async () => {
+    const display = getDisplayInfo()!;
+    const envs = [
+      makeEnv({ backend: display.backend, api: display.api }),
+      makeEnv({ backend: display.backend, api: display.api }),
+      makeEnv({ backend: 'default', api: 'auto' }),
+    ];
+    for (const env of envs) await env.teardown();
+    expect(getDisplayInfo()).toBe(display);
   });
 
   // Assertions here use `Object.getOwnPropertyNames` rather than `Object.hasOwn`/`in`: reads of a

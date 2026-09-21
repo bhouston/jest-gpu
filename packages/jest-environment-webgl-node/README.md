@@ -52,9 +52,10 @@ File fetching is enabled by default. Relative paths resolve from that test file'
 (default: `process.cwd()`), while HTTP, data and blob URLs use Node's native `fetch`. Set
 `fetch: false` to use native fetch for every URL. The environment never replaces host globals.
 
-The native WebGL display itself is process-wide. Set `backend` and `api` consistently across all
-projects that can share a Jest worker; the environment reports a conflict if two explicit option
-sets request different native initialization in one worker.
+The native WebGL display itself is process-wide and is created by the first context in a worker, so
+set `backend` and `api` consistently across all projects that can share a Jest worker. The
+environment throws if an explicit `backend` or `api` disagrees with the display already initialized
+in that worker, including one initialized with platform defaults by a project that set no options.
 
 Types for the installed globals: add `import 'jest-environment-webgl-node/globals';` to a `.d.ts`
 file your tsconfig includes.

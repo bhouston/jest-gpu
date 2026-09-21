@@ -1,44 +1,10 @@
 import project from './jest.project.mjs';
+import { projects as demoProjects } from './demo/jest.config.mjs';
 
 /** @type {import('jest').Config} */
 export default {
   ...project,
-  projects: [
-    '<rootDir>/packages/*',
-    {
-      ...project,
-      displayName: 'demo-webgl',
-      rootDir: 'demo',
-      testEnvironment: 'jest-environment-webgl-node',
-      testMatch: ['<rootDir>/test/webgl/**/*.test.ts'],
-    },
-    {
-      ...project,
-      displayName: 'demo-webgpu',
-      rootDir: 'demo',
-      testEnvironment: 'jest-environment-webgpu-node',
-      testMatch: ['<rootDir>/test/webgpu/**/*.test.ts'],
-    },
-    // Plain CommonJS demo tests, run as their own projects. No extensionsToTreatAsEsm/transform
-    // from `project`: .cjs files are loaded by Jest's CJS path regardless of the root
-    // --experimental-vm-modules flag, so these genuinely exercise `require()` of the package.
-    {
-      displayName: 'demo-cjs-webgpu',
-      rootDir: 'demo',
-      testEnvironment: 'jest-environment-webgpu-node',
-      testMatch: ['<rootDir>/test/cjs/webgpu.test.cjs'],
-      transform: {},
-      testTimeout: 60_000,
-    },
-    {
-      displayName: 'demo-cjs-webgl',
-      rootDir: 'demo',
-      testEnvironment: 'jest-environment-webgl-node',
-      testMatch: ['<rootDir>/test/cjs/webgl.test.cjs'],
-      transform: {},
-      testTimeout: 60_000,
-    },
-  ],
+  projects: ['<rootDir>/packages/*', ...demoProjects],
   // scripts/workflow.test.mjs is a node:test suite (run via `pnpm test:workflow`), not a Jest
   // suite; Jest's default testMatch otherwise picks it up and fails with "must contain at least
   // one test" since it has no Jest `test()` calls.

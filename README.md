@@ -4,8 +4,8 @@
 [![Coverage][coverage-badge]][coverage-url]
 
 Run real WebGL and WebGPU code inside plain Jest, with no browser, no Playwright and no mocks.
-Two Jest environments put a GPU-backed context on the test's sandbox global, so three.js, regl,
-pixi, Babylon.js and plain WebGL/WebGPU code run unchanged.
+Two Jest environments put a GPU-backed context on the test's sandbox global, so three.js,
+Babylon.js and plain WebGL/WebGPU code run unchanged.
 
 ## Render with WebGPU
 

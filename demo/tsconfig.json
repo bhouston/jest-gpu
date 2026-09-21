@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.node.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": ".",
+    "types": ["node", "@webgpu/types"]
+  },
+  "include": ["globals.d.ts", "test/**/*.ts"]
+}

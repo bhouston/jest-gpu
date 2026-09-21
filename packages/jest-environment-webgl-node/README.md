@@ -42,10 +42,19 @@ it('renders', () => {
 ```
 
 `testEnvironmentOptions` are those of node-webgl's `init()` (`backend`, `api`) and `installDOM()`
-(`baseDir`, `fetch`, `devicePixelRatio`, `innerWidth`, `innerHeight`, `frameInterval`). Because
-`installDOM()` writes to the host `globalThis` and is idempotent, only the **first** test file's
-options take effect for the underlying host install; every test file's sandbox still gets the
-same installed globals copied in.
+(`baseDir`, `fetch`, `devicePixelRatio`, `innerWidth`, `innerHeight`, `frameInterval`). Each test
+file receives a fresh document, DOM event state, viewport values, file-fetch base directory and
+animation-frame queue. Animation frames use Jest's sandbox timers, so `jest.useFakeTimers()` and
+`jest.advanceTimersByTime()` control them; pending frames are cancelled during environment
+teardown.
+
+File fetching is enabled by default. Relative paths resolve from that test file's `baseDir`
+(default: `process.cwd()`), while HTTP, data and blob URLs use Node's native `fetch`. Set
+`fetch: false` to use native fetch for every URL. The environment never replaces host globals.
+
+The native WebGL display itself is process-wide. Set `backend` and `api` consistently across all
+projects that can share a Jest worker; the environment reports a conflict if two explicit option
+sets request different native initialization in one worker.
 
 Types for the installed globals: add `import 'jest-environment-webgl-node/globals';` to a `.d.ts`
 file your tsconfig includes.

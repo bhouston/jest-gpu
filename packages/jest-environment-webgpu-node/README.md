@@ -57,7 +57,8 @@ const { width, height, data } = await canvas.readPixels();
 // data is RGBA8, top row first - feed it to a screenshot matcher such as jest-image-snapshot
 ```
 
-`readPixels()` returns `{ width, height, data }` RGBA8 pixels. `asElement()` is the same object typed as an
+`readPixels()` returns `{ width, height, data }` RGBA8 pixels for `rgba8unorm`, `rgba8unorm-srgb`,
+`bgra8unorm`, and `bgra8unorm-srgb` canvas formats. Other formats are rejected explicitly. `asElement()` is the same object typed as an
 `HTMLCanvasElement` for library signatures that demand one.
 
 Import `jest-environment-webgpu-node/globals` in a `.d.ts` (or add it to `types` in `tsconfig.json`) to get

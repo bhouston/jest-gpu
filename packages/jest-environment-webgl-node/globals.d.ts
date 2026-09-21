@@ -48,6 +48,6 @@ declare global {
   var createImageBitmap: typeof nodeCreateImageBitmap;
   var WebGLRenderingContext: typeof NodeWebGLRenderingContext;
   var WebGL2RenderingContext: typeof NodeWebGL2RenderingContext;
-  function requestAnimationFrame(callback: (time: number) => void): number;
-  function cancelAnimationFrame(handle: number): void;
+  function requestAnimationFrame(callback: (time: number) => void): ReturnType<typeof setTimeout>;
+  function cancelAnimationFrame(handle: ReturnType<typeof setTimeout>): void;
 }

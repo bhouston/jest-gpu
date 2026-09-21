@@ -13,14 +13,42 @@ Use [`jest-environment-webgpu-node`](packages/jest-environment-webgpu-node/READM
 WebGPU rendering. This example renders a three.js cube and reads back the center pixel.
 
 ```sh
-pnpm add -D jest jest-environment-webgpu-node three
+pnpm init
+pnpm pkg set type=module
+pnpm add -D jest jest-environment-node @jest/globals @swc/core @swc/jest typescript @types/node @types/three @webgpu/types jest-environment-webgpu-node three
+```
+
+Create `globals.d.ts` so TypeScript sees the environment globals:
+
+```ts
+import 'jest-environment-webgpu-node/globals';
 ```
 
 ```js
 // jest.config.mjs
 export default {
   testEnvironment: 'jest-environment-webgpu-node',
+  extensionsToTreatAsEsm: ['.ts'],
+  transform: { '^.+\\.ts$': ['@swc/jest', { module: { type: 'es6' } }] },
 };
+```
+
+Create `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2024",
+    "lib": ["ES2024", "DOM"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["node", "@webgpu/types"]
+  },
+  "include": ["**/*.ts"]
+}
 ```
 
 ```ts
@@ -34,6 +62,7 @@ it('renders a cube', async () => {
   const renderer = new THREE.WebGPURenderer({ canvas: canvas.asElement() });
   await renderer.init();
   renderer.setSize(256, 256, false);
+  renderer.setClearColor(0x000000, 1);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
   camera.position.z = 3;
@@ -44,9 +73,16 @@ it('renders a cube', async () => {
   await renderer.renderAsync(scene, camera);
   const { width, height, data } = await canvas.readPixels();
   const center = (Math.floor(height / 2) * width + Math.floor(width / 2)) * 4;
-  expect(data[center + 3]).toBe(255); // the cube covers the center pixel
+  expect(Array.from(data.subarray(center, center + 3))).not.toEqual([0, 0, 0]);
+  expect(data[center + 3]).toBe(255);
   renderer.dispose();
 });
+```
+
+Run the TypeScript ESM test with:
+
+```sh
+NODE_OPTIONS=--experimental-vm-modules pnpm exec jest
 ```
 
 `createCanvas` is installed as a global (CommonJS test files can use it without importing it) and
@@ -59,14 +95,30 @@ Use [`jest-environment-webgl-node`](packages/jest-environment-webgl-node/README.
 WebGL 1/2 rendering. Same shape, using `document.createElement('canvas')` and `gl.readPixels`.
 
 ```sh
-pnpm add -D jest jest-environment-webgl-node three
+pnpm init
+pnpm pkg set type=module
+pnpm add -D jest jest-environment-node @jest/globals @swc/core @swc/jest typescript @types/node @types/three jest-environment-webgl-node three
+```
+
+Create `globals.d.ts` for the WebGL browser globals:
+
+```ts
+import 'jest-environment-webgl-node/globals';
 ```
 
 ```js
 // jest.config.mjs
 export default {
   testEnvironment: 'jest-environment-webgl-node',
+  extensionsToTreatAsEsm: ['.ts'],
+  transform: { '^.+\\.ts$': ['@swc/jest', { module: { type: 'es6' } }] },
 };
+```
+
+Use the same `tsconfig.json` shown above, removing `@webgpu/types` from `types`, then run:
+
+```sh
+NODE_OPTIONS=--experimental-vm-modules pnpm exec jest
 ```
 
 ```ts
@@ -78,6 +130,7 @@ it('renders a cube', () => {
   const canvas = document.createElement('canvas');
   const renderer = new THREE.WebGLRenderer({ canvas });
   renderer.setSize(256, 256, false);
+  renderer.setClearColor(0x000000, 1);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
   camera.position.z = 3;
@@ -89,7 +142,8 @@ it('renders a cube', () => {
   const gl = renderer.getContext();
   const pixels = new Uint8Array(4);
   gl.readPixels(128, 128, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-  expect(pixels[3]).toBe(255); // the cube covers the center pixel
+  expect(Array.from(pixels.subarray(0, 3))).not.toEqual([0, 0, 0]);
+  expect(pixels[3]).toBe(255);
   renderer.dispose();
 });
 ```
@@ -115,8 +169,9 @@ const png = await sharp(data, { raw: { width, height, channels: 4 } })
 expect(png).toMatchImageSnapshot();
 ```
 
-For more examples, explore [`demo/`](demo): device checks, uploads, readbacks, triangles, and
-rendering with three.js, Babylon.js, Babylon Lite and vgpu.
+For a complete project you can copy, explore the [`demo/`](demo): its own package manifest, Jest
+and TypeScript configuration, device checks, uploads, readbacks, triangles, and rendering with
+three.js, Babylon.js, Babylon Lite and vgpu.
 
 ## Development
 

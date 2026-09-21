@@ -95,12 +95,27 @@ importers:
       '@jest/globals':
         specifier: ^30.5.2
         version: 30.5.2
+      '@swc/core':
+        specifier: ^1.16.2
+        version: 1.16.2
+      '@swc/jest':
+        specifier: ^0.2.39
+        version: 0.2.39(@swc/core@1.16.2)
+      '@types/node':
+        specifier: ^24.13.5
+        version: 24.13.6
       '@types/three':
         specifier: ^0.186.0
         version: 0.186.0
       '@webgpu/types':
         specifier: ^0.1.72
         version: 0.1.74
+      jest:
+        specifier: ^30.5.2
+        version: 30.5.2(@types/node@24.13.6)
+      jest-environment-node:
+        specifier: ^30.5.2
+        version: 30.5.2
       jest-environment-webgl-node:
         specifier: workspace:*
         version: link:../packages/jest-environment-webgl-node
@@ -110,6 +125,9 @@ importers:
       three:
         specifier: ^0.186.0
         version: 0.186.0
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
       vgpu:
         specifier: ^0.5.0
         version: 0.5.0(three@0.186.0)

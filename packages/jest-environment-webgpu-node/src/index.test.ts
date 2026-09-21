@@ -1,4 +1,4 @@
-import { expect, it } from '@jest/globals';
+import { expect, it, jest } from '@jest/globals';
 import WebgpuEnvironment, { HeadlessCanvas } from './index.js';
 
 const makeEnv = async (testEnvironmentOptions: Record<string, unknown> = { dawnOptions: [] }) => {
@@ -27,7 +27,14 @@ it('adds navigator.gpu backed by Dawn, the GPU* globals, createCanvas and a canv
   expect(global.document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas')).toBeInstanceOf(HeadlessCanvas);
   expect(global.document.createElement('div')).toEqual({});
   expect(global.document.createElementNS('', 'div')).toEqual({});
+  expect(global.window).toBe(global);
+  expect(global.self).toBe(global);
   expect(global.self).toBe(global.window);
+  expect(global.self.navigator).toBe(global.navigator);
+  expect(global.window.document).toBe(global.document);
+  expect(global.eval('window === globalThis && self.navigator === navigator && window.document === document')).toBe(
+    true,
+  );
   expect(global.window.devicePixelRatio).toBe(1);
   await new Promise<number>((resolve) => global.requestAnimationFrame(resolve));
   global.cancelAnimationFrame(global.window.requestAnimationFrame(() => {}));
@@ -55,6 +62,49 @@ it('adds navigator.gpu backed by Dawn, the GPU* globals, createCanvas and a canv
   expect(global.createCanvas).toBeUndefined();
   expect(global.HTMLCanvasElement).toBeUndefined();
   expect(typeof global.process).toBe('object');
+});
+
+it('runs animation frames through Jest fake timers and supports cancellation', async () => {
+  const env = await makeEnv();
+  const global = env.global as any;
+  env.fakeTimersModern!.useFakeTimers({ now: 1000 });
+  const callback = jest.fn();
+
+  global.requestAnimationFrame(callback);
+  const cancelled = global.window.requestAnimationFrame(callback);
+  global.cancelAnimationFrame(cancelled);
+  expect(callback).not.toHaveBeenCalled();
+
+  await env.fakeTimersModern!.advanceTimersByTimeAsync(16);
+  expect(callback).toHaveBeenCalledTimes(1);
+  expect(callback).toHaveBeenCalledWith(16);
+  await env.teardown();
+});
+
+it('cancels outstanding animation frames during teardown', async () => {
+  const env = await makeEnv();
+  const global = env.global as any;
+  const callback = jest.fn();
+  global.requestAnimationFrame(callback);
+
+  await env.teardown();
+  await new Promise((resolve) => setTimeout(resolve, 30));
+
+  expect(callback).not.toHaveBeenCalled();
+});
+
+it('cancels a real animation frame after switching the sandbox to fake timers', async () => {
+  const env = await makeEnv();
+  const global = env.global as any;
+  const callback = jest.fn();
+  const handle = global.requestAnimationFrame(callback);
+
+  env.fakeTimersModern!.useFakeTimers();
+  global.cancelAnimationFrame(handle);
+  await new Promise((resolve) => setTimeout(resolve, 30));
+
+  expect(callback).not.toHaveBeenCalled();
+  await env.teardown();
 });
 
 it('reuses an existing navigator object and defaults dawnOptions when omitted', async () => {

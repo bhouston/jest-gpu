@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, expect, it } from '@jest/globals';
+import { afterAll, beforeAll, expect, it, jest } from '@jest/globals';
 import { createCanvas } from './canvas.js';
 import WebgpuEnvironment from './index.js';
 
@@ -52,6 +52,32 @@ it('requires configure() before getCurrentTexture()', () => {
   const context = createCanvas(4, 4).getContext('webgpu');
   expect(context.getConfiguration()).toBeNull();
   expect(() => context.getCurrentTexture()).toThrow(/configure/);
+});
+
+it('rejects pixel readback formats whose memory layout is not RGBA8', async () => {
+  const canvas = createCanvas(4, 4);
+  canvas.getContext('webgpu').configure({ device, format: 'rgba16float' });
+  await expect(canvas.readPixels()).rejects.toThrow(/supports only 8-bit RGBA\/BGRA.*rgba16float/);
+});
+
+it('destroys the staging buffer when pixel readback fails', async () => {
+  const destroy = jest.fn();
+  const buffer = {
+    mapAsync: jest.fn().mockRejectedValue(new Error('map failed')),
+    mapState: 'unmapped',
+    destroy,
+  };
+  const fakeDevice = {
+    createTexture: () => ({ width: 1, height: 1, createView() {}, destroy() {} }),
+    createBuffer: () => buffer,
+    createCommandEncoder: () => ({ copyTextureToBuffer() {}, finish: () => ({}) }),
+    queue: { submit() {} },
+  };
+  const canvas = createCanvas(1, 1);
+  canvas.getContext('webgpu').configure({ device: fakeDevice as unknown as GPUDevice, format: 'rgba8unorm' });
+
+  await expect(canvas.readPixels()).rejects.toThrow('map failed');
+  expect(destroy).toHaveBeenCalledTimes(1);
 });
 
 it('renders into the current texture and reads pixels back, swizzling bgra', async () => {

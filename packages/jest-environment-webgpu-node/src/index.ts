@@ -13,29 +13,47 @@ export type WebgpuNodeOptions = {
 };
 
 /** Just enough DOM for libraries that make their own canvas and drive a frame loop. Only installed when missing. */
-const requestAnimationFrame = (callback: (time: number) => void): NodeJS.Timeout =>
-  setTimeout(() => callback(performance.now()), 16).unref();
+type TimerHandle = ReturnType<typeof setTimeout>;
+type SandboxGlobal = Record<string, unknown> & {
+  clearTimeout: typeof clearTimeout;
+  performance: Performance;
+  setTimeout: typeof setTimeout;
+};
 
-const domShims = (): Record<string, unknown> => {
-  const window = {
-    devicePixelRatio: 1,
-    requestAnimationFrame,
-    cancelAnimationFrame: clearTimeout,
+const domShims = (
+  global: SandboxGlobal,
+  animationFrames: Map<TimerHandle, typeof clearTimeout>,
+): Record<string, unknown> => {
+  const requestAnimationFrame = (callback: (time: number) => void): TimerHandle => {
+    const handle = global.setTimeout(() => {
+      animationFrames.delete(handle);
+      callback(global.performance.now());
+    }, 16);
+    animationFrames.set(handle, global.clearTimeout);
+    (handle as NodeJS.Timeout).unref?.();
+    return handle;
+  };
+  const cancelAnimationFrame = (handle: TimerHandle): void => {
+    const clear = animationFrames.get(handle) ?? global.clearTimeout;
+    animationFrames.delete(handle);
+    clear(handle);
+  };
+  const document = {
+    createElement: (tag: string) => (tag === 'canvas' ? new HeadlessCanvas() : {}),
+    createElementNS: (_ns: string, tag: string) => (tag === 'canvas' ? new HeadlessCanvas() : {}),
     addEventListener() {},
     removeEventListener() {},
   };
   return {
-    HTMLCanvasElement: HeadlessCanvas,
-    document: {
-      createElement: (tag: string) => (tag === 'canvas' ? new HeadlessCanvas() : {}),
-      createElementNS: (_ns: string, tag: string) => (tag === 'canvas' ? new HeadlessCanvas() : {}),
-      addEventListener() {},
-      removeEventListener() {},
-    },
-    window,
-    self: window,
+    document,
+    devicePixelRatio: 1,
     requestAnimationFrame,
-    cancelAnimationFrame: clearTimeout,
+    cancelAnimationFrame,
+    addEventListener() {},
+    removeEventListener() {},
+    HTMLCanvasElement: HeadlessCanvas,
+    window: global,
+    self: global,
   };
 };
 
@@ -49,6 +67,7 @@ export default class WebgpuEnvironment extends TestEnvironment {
   #navigator: { gpu?: GPU } = {};
   #nativeAdded: boolean;
   #dawnOptions: string[] | undefined;
+  #animationFrames = new Map<TimerHandle, typeof clearTimeout>();
 
   constructor(config: JestEnvironmentConfig, context: EnvironmentContext) {
     super(config, context);
@@ -80,8 +99,8 @@ export default class WebgpuEnvironment extends TestEnvironment {
   override async setup(): Promise<void> {
     await super.setup();
     const { create, globals } = await import('webgpu');
-    const global = this.global as unknown as Record<string, unknown>;
-    const shims = { ...globals, ...domShims(), createCanvas } as Record<string, unknown>;
+    const global = this.global as unknown as SandboxGlobal;
+    const shims = { ...globals, ...domShims(global, this.#animationFrames), createCanvas } as Record<string, unknown>;
     this.#added = Object.keys(shims).filter((key) => !(key in global));
     for (const key of this.#added) global[key] = shims[key];
     if (this.#nativeAdded) this.#added.push('_native');
@@ -90,8 +109,10 @@ export default class WebgpuEnvironment extends TestEnvironment {
   }
 
   override async teardown(): Promise<void> {
-    delete this.#navigator.gpu;
     const global = this.global as unknown as Record<string, unknown>;
+    for (const [handle, clear] of this.#animationFrames) clear(handle);
+    this.#animationFrames.clear();
+    delete this.#navigator.gpu;
     for (const key of this.#added) delete global[key];
     await super.teardown();
   }

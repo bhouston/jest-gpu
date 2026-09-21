@@ -21,7 +21,7 @@
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
     "release": "pnpm -r --workspace-concurrency=1 --filter './packages/*' exec semantic-release -e semantic-release-monorepo",
-    "package:check": "pnpm -r --filter './packages/*' exec npm pack --dry-run --ignore-scripts && pnpm -r --filter './packages/*' exec publint && pnpm -r --filter './packages/*' exec attw --pack . --profile node16 --exclude-entrypoints ./globals",
+    "package:check": "pnpm -r --filter './packages/*' exec npm pack --dry-run --ignore-scripts && pnpm -r --filter './packages/*' exec publint && pnpm -r --filter './packages/*' exec attw --pack . --profile node16 --exclude-entrypoints ./globals && node --test scripts/package.test.mjs",
     "test:workflow": "node --test scripts/workflow.test.mjs"
   },
   "devDependencies": {

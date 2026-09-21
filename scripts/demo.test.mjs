@@ -53,6 +53,23 @@ test('the copied demo uses only its local configuration', async () => {
   assert.match(result.stderr, /2 passed/);
 });
 
+test('the documented copy commands replace workspace dependency versions', async () => {
+  const temporaryDirectory = await temporaryProject();
+  await cp(join(demo, 'package.json'), join(temporaryDirectory, 'package.json'));
+  const readme = await readFile(join(demo, 'README.md'), 'utf8');
+  const commands = readme.match(/^npm pkg set devDependencies\.[^\n]+$/gm) ?? [];
+  assert.equal(commands.length, 2);
+
+  for (const command of commands) {
+    const [, , , assignment] = command.split(' ');
+    run(temporaryDirectory, 'npm', ['pkg', 'set', assignment]);
+  }
+
+  const manifest = JSON.parse(await readFile(join(temporaryDirectory, 'package.json'), 'utf8'));
+  assert.equal(manifest.devDependencies['jest-environment-webgl-node'], 'latest');
+  assert.equal(manifest.devDependencies['jest-environment-webgpu-node'], 'latest');
+});
+
 test('the README TypeScript quickstarts type-check and run', async () => {
   const readme = await readFile(join(repository, 'README.md'), 'utf8');
   const webgpu = readme.slice(readme.indexOf('## Render with WebGPU'), readme.indexOf('## Render with WebGL'));

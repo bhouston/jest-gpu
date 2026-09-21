@@ -18,8 +18,8 @@ This is the single workflow standard for human contributors, Claude, and Codex.
    release. Other allowed types are `docs`, `chore`, `refactor`, `test`, `style`,
    `build`, `ci`, and `revert`; these ordinarily do not release. Reference the issue
    in the body when useful. Do not manually edit the version or release notes.
-5. Run `pnpm lint`, `pnpm tsc`, `pnpm test --coverage`,
-   `pnpm audit --audit-level=high`, and `pnpm package:check`.
+5. Run `pnpm lint`, `pnpm tsc`, `pnpm test --coverage`, `pnpm test:cjs`,
+   `pnpm test:consumer`, `pnpm audit --audit-level=high`, and `pnpm package:check`.
    Install with `pnpm install --frozen-lockfile` using the Node version in
    `.nvmrc`. Coverage must be at least 95% for statements, branches, functions,
    and lines. The native GPU packages are real dependencies, so tests need a

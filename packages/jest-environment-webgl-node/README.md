@@ -56,3 +56,11 @@ a test file itself imports an ESM-only library.
 
 On Linux CI install Mesa (`apt-get install libegl1 libgles2 libgl1-mesa-dri`) and set
 `LIBGL_ALWAYS_SOFTWARE=1`. macOS and Windows use prebuilt binaries.
+
+## Author
+
+Created by [Ben Houston](https://ben3d.ca) and sponsored by [Land of Assets](https://landofassets.com).
+
+## License
+
+MIT

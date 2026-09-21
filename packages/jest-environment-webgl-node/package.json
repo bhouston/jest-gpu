@@ -1,0 +1,62 @@
+{
+  "name": "jest-environment-webgl-node",
+  "version": "0.1.0",
+  "description": "Jest environment that provides real headless WebGL 1/2 (ANGLE via @onirenaud/node-webgl) in Node",
+  "keywords": [
+    "headless",
+    "jest",
+    "jest-environment",
+    "testing",
+    "three.js",
+    "webgl",
+    "webgl2"
+  ],
+  "homepage": "https://github.com/bhouston/jest-gpu#readme",
+  "bugs": {
+    "url": "https://github.com/bhouston/jest-gpu/issues"
+  },
+  "license": "MIT",
+  "author": "Ben Houston <ben@ben3d.ca> (https://ben3d.ca)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhouston/jest-gpu.git",
+    "directory": "packages/jest-environment-webgl-node"
+  },
+  "files": [
+    "globals.d.ts",
+    "dist/**/*.js",
+    "dist/**/*.js.map",
+    "dist/**/*.d.ts",
+    "dist/**/*.d.ts.map",
+    "CHANGELOG.md"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./globals": {
+      "types": "./globals.d.ts"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "tsc": "tsc"
+  },
+  "dependencies": {
+    "@onirenaud/node-webgl": "^0.2.0"
+  },
+  "peerDependencies": {
+    "jest": ">=29 <31",
+    "jest-environment-node": ">=29 <31"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

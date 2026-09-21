@@ -183,6 +183,12 @@ pnpm test:coverage
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the branch, commit and release workflow.
 
+## Using Vitest?
+
+Equivalent packages for Vitest live in [vitest-gpu](https://github.com/bhouston/vitest-gpu):
+[`vitest-environment-webgpu-node`](https://github.com/bhouston/vitest-gpu/tree/main/packages/vitest-environment-webgpu-node)
+and [`vitest-environment-webgl-node`](https://github.com/bhouston/vitest-gpu/tree/main/packages/vitest-environment-webgl-node).
+
 ## Author
 
 Created by [Ben Houston](https://ben3d.ca) and sponsored by [Land of Assets](https://landofassets.com).

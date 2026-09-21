@@ -19,9 +19,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
+        floor: [false]
         include:
-          # The supported floor: engines.node >=22.12 and the jest >=29 peer range.
+          # The supported floor: engines.node >=22.12 and the jest >=29 peer range. `floor` differs
+          # from the base combinations so this is added as a new leg rather than merged into one.
           - os: ubuntu-latest
+            floor: true
             node: '22'
             jest: '29'
     env:

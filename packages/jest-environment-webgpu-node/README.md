@@ -70,6 +70,12 @@ works from a plain CommonJS test file, and `testEnvironment: 'jest-environment-w
 resolves the same way either way. `NODE_OPTIONS=--experimental-vm-modules` is only needed when a
 test file itself imports an ESM-only library, such as `three/webgpu`.
 
+## Using Vitest?
+
+The equivalent package for Vitest is
+[`vitest-environment-webgpu-node`](https://github.com/bhouston/vitest-gpu/tree/main/packages/vitest-environment-webgpu-node)
+from [vitest-gpu](https://github.com/bhouston/vitest-gpu).
+
 ## Author
 
 Created by [Ben Houston](https://ben3d.ca) and sponsored by [Land of Assets](https://landofassets.com).

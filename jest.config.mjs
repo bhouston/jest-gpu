@@ -19,6 +19,25 @@ export default {
       testEnvironment: 'jest-environment-webgpu-node',
       testMatch: ['<rootDir>/test/webgpu/**/*.test.ts'],
     },
+    // Plain CommonJS demo tests, run as their own projects. No extensionsToTreatAsEsm/transform
+    // from `project`: .cjs files are loaded by Jest's CJS path regardless of the root
+    // --experimental-vm-modules flag, so these genuinely exercise `require()` of the package.
+    {
+      displayName: 'demo-cjs-webgpu',
+      rootDir: 'demo',
+      testEnvironment: 'jest-environment-webgpu-node',
+      testMatch: ['<rootDir>/test/cjs/webgpu.test.cjs'],
+      transform: {},
+      testTimeout: 60_000,
+    },
+    {
+      displayName: 'demo-cjs-webgl',
+      rootDir: 'demo',
+      testEnvironment: 'jest-environment-webgl-node',
+      testMatch: ['<rootDir>/test/cjs/webgl.test.cjs'],
+      transform: {},
+      testTimeout: 60_000,
+    },
   ],
   // scripts/workflow.test.mjs is a node:test suite (run via `pnpm test:workflow`), not a Jest
   // suite; Jest's default testMatch otherwise picks it up and fails with "must contain at least

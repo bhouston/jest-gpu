@@ -50,8 +50,9 @@ same installed globals copied in.
 Types for the installed globals: add `import 'jest-environment-webgl-node/globals';` to a `.d.ts`
 file your tsconfig includes.
 
-If any of your test files import an ESM-only library, run Jest with
-`NODE_OPTIONS=--experimental-vm-modules`; plain CommonJS/transpiled test files don't need it.
+This package ships both an ESM and a CommonJS build, so `require('jest-environment-webgl-node')`
+works from a plain CommonJS test file. `NODE_OPTIONS=--experimental-vm-modules` is only needed when
+a test file itself imports an ESM-only library.
 
 On Linux CI install Mesa (`apt-get install libegl1 libgles2 libgl1-mesa-dri`) and set
 `LIBGL_ALWAYS_SOFTWARE=1`. macOS and Windows use prebuilt binaries.

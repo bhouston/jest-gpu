@@ -22,21 +22,31 @@
     "directory": "packages/jest-environment-webgpu-node"
   },
   "files": [
-    "dist/**/*.js",
-    "dist/**/*.js.map",
-    "dist/**/*.d.ts",
-    "dist/**/*.d.ts.map",
+    "dist/**/*.cjs",
+    "dist/**/*.cjs.map",
+    "dist/**/*.mjs",
+    "dist/**/*.mjs.map",
+    "dist/**/*.d.cts",
+    "dist/**/*.d.cts.map",
+    "dist/**/*.d.mts",
+    "dist/**/*.d.mts.map",
     "src/globals.d.ts",
     "CHANGELOG.md"
   ],
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./globals": {
       "types": "./src/globals.d.ts"
@@ -46,8 +56,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc",
-    "tsc": "tsc"
+    "build": "tsdown",
+    "tsc": "tsc --noEmit"
   },
   "dependencies": {
     "@webgpu/types": "^0.1.72",

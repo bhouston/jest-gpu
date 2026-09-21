@@ -1,15 +1,18 @@
 import { expect, it } from '@jest/globals';
 import WebgpuEnvironment, { HeadlessCanvas } from './index.js';
 
-const makeEnv = (testEnvironmentOptions: Record<string, unknown> = { dawnOptions: [] }) =>
-  new WebgpuEnvironment({ projectConfig: { testEnvironmentOptions } as any, globalConfig: {} as any }, {
+const makeEnv = async (testEnvironmentOptions: Record<string, unknown> = { dawnOptions: [] }) => {
+  const env = new WebgpuEnvironment({ projectConfig: { testEnvironmentOptions } as any, globalConfig: {} as any }, {
     console,
     docblockPragmas: {},
     testPath: import.meta.filename,
   } as any);
+  await env.setup();
+  return env;
+};
 
 it('adds navigator.gpu backed by Dawn, the GPU* globals, createCanvas and a canvas shim, and removes them on teardown', async () => {
-  const env = makeEnv();
+  const env = await makeEnv();
   const global = env.global as any;
 
   // pre-existing globals (e.g. Node's own) are untouched
@@ -55,7 +58,7 @@ it('adds navigator.gpu backed by Dawn, the GPU* globals, createCanvas and a canv
 });
 
 it('reuses an existing navigator object and defaults dawnOptions when omitted', async () => {
-  const env = makeEnv({});
+  const env = await makeEnv({});
   const global = env.global as any;
   const navigator = global.navigator;
   expect(navigator).toBeDefined();
@@ -70,7 +73,7 @@ it('reuses an existing navigator object and defaults dawnOptions when omitted', 
 // give false negatives for those, though the property is genuinely present (and visible from
 // inside the sandbox, which is what matters for Babylon.js's own hasOwnProperty guard).
 it('pre-seeds an own `_native` property for Babylon.js and removes it on teardown', async () => {
-  const env = makeEnv();
+  const env = await makeEnv();
   const global = env.global as any;
   expect(Object.getOwnPropertyNames(global)).toContain('_native');
   expect(global._native).toBeUndefined();
@@ -84,7 +87,7 @@ it('leaves a pre-existing `_native` property alone', async () => {
   // `testEnvironmentOptions` is assigned onto the sandbox global before jest-environment-node's
   // constructor returns, so this simulates `_native` already being an own property when our
   // constructor's guard runs, as it would be if some earlier module had defined it.
-  const env = makeEnv({ dawnOptions: [], _native: 'preexisting' });
+  const env = await makeEnv({ dawnOptions: [], _native: 'preexisting' });
   const global = env.global as any;
   expect(global._native).toBe('preexisting');
 

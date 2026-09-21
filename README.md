@@ -96,11 +96,12 @@ it('renders a cube', () => {
 
 ## ESM note
 
-Jest runs CommonJS by default. The environments themselves need nothing special, but a test file
-that imports an ESM-only library, such as `three/webgpu` or `@babylonjs/lite`, needs Jest run with
-`NODE_OPTIONS=--experimental-vm-modules` and a TypeScript transform that emits ESM. This repo's own
-[`jest.config.mjs`](jest.config.mjs) and [`jest.project.mjs`](jest.project.mjs) show a working setup
-with `@swc/jest`.
+Both packages ship as dual ESM/CommonJS builds, so `require('jest-environment-webgpu-node')` and
+`require('jest-environment-webgl-node')` work from plain CommonJS test files, and `testEnvironment`
+resolves either package by name either way. `NODE_OPTIONS=--experimental-vm-modules` is only needed
+when a test file itself imports an ESM-only library, such as `three/webgpu` or `@babylonjs/lite`,
+together with a TypeScript transform that emits ESM. This repo's own [`jest.config.mjs`](jest.config.mjs)
+and [`jest.project.mjs`](jest.project.mjs) show a working setup with `@swc/jest`.
 
 ## Screenshots
 

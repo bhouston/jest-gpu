@@ -12,6 +12,7 @@ beforeAll(async () => {
     docblockPragmas: {},
     testPath: import.meta.filename,
   } as any);
+  await env.setup();
   const global = env.global as any;
   GPUTextureUsage = global.GPUTextureUsage;
   const navigator = global.navigator as Navigator;

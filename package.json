@@ -12,18 +12,20 @@
   "scripts": {
     "prepare": "husky",
     "build": "pnpm -r --filter './packages/*' build",
-    "tsc": "pnpm -r tsc",
+    "tsc": "pnpm build && pnpm -r tsc",
     "test": "pnpm build && NODE_OPTIONS=--experimental-vm-modules jest",
     "test:coverage": "pnpm build && NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "test:cjs": "pnpm build && jest --selectProjects demo-cjs-webgpu demo-cjs-webgl",
     "format": "oxfmt .",
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
     "release": "pnpm -r --workspace-concurrency=1 --filter './packages/*' exec semantic-release -e semantic-release-monorepo",
-    "package:check": "pnpm -r --filter './packages/*' exec npm pack --dry-run --ignore-scripts",
+    "package:check": "pnpm -r --filter './packages/*' exec npm pack --dry-run --ignore-scripts && pnpm -r --filter './packages/*' exec publint && pnpm -r --filter './packages/*' exec attw --pack . --profile node16 --exclude-entrypoints ./globals",
     "test:workflow": "node --test scripts/workflow.test.mjs"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
     "@jest/globals": "^30.5.2",
@@ -43,8 +45,10 @@
     "lint-staged": "^17.5.1",
     "oxfmt": "^0.58.0",
     "oxlint": "^1.83.0",
+    "publint": "^0.3.24",
     "semantic-release": "^25.0.9",
     "semantic-release-monorepo": "^8.0.2",
+    "tsdown": "^0.23.0",
     "typescript": "^7.0.2"
   },
   "lint-staged": {

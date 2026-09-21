@@ -1,0 +1,61 @@
+{
+  "name": "jest-gpu",
+  "private": true,
+  "description": "Jest environments for headless WebGL and WebGPU in Node",
+  "license": "MIT",
+  "author": "Ben Houston <ben@ben3d.ca> (https://ben3d.ca)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhouston/jest-gpu.git"
+  },
+  "type": "module",
+  "scripts": {
+    "prepare": "husky",
+    "build": "pnpm -r --filter './packages/*' build",
+    "tsc": "pnpm -r tsc",
+    "test": "pnpm build && NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:coverage": "pnpm build && NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "format": "oxfmt .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "release": "pnpm -r --workspace-concurrency=1 --filter './packages/*' exec semantic-release -e semantic-release-monorepo",
+    "package:check": "pnpm -r --filter './packages/*' exec npm pack --dry-run --ignore-scripts",
+    "test:workflow": "node --test scripts/workflow.test.mjs"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.2",
+    "@commitlint/config-conventional": "^21.2.2",
+    "@jest/globals": "^30.5.2",
+    "@semantic-release/changelog": "^7.0.0",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/github": "^12.0.9",
+    "@semantic-release/npm": "^13.1.5",
+    "@semantic-release/release-notes-generator": "^14.1.1",
+    "@swc/core": "^1.16.2",
+    "@swc/jest": "^0.2.39",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.13.5",
+    "conventional-changelog-conventionalcommits": "^9.3.1",
+    "husky": "^9.1.7",
+    "jest": "^30.5.2",
+    "jest-environment-node": "^30.5.2",
+    "lint-staged": "^17.5.1",
+    "oxfmt": "^0.58.0",
+    "oxlint": "^1.83.0",
+    "semantic-release": "^25.0.9",
+    "semantic-release-monorepo": "^8.0.2",
+    "typescript": "^7.0.2"
+  },
+  "lint-staged": {
+    "*.{js,ts,mjs,cjs}": [
+      "oxfmt",
+      "oxlint --fix"
+    ],
+    "*.{json,md,yml,yaml}": "oxfmt"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "pnpm@11.1.3"
+}

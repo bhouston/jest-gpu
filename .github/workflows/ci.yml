@@ -13,12 +13,17 @@ permissions:
 
 jobs:
   quality:
-    name: Quality (${{ matrix.os }})
+    name: Quality (${{ matrix.os }}${{ matrix.jest && format(', node {0}, jest {1}', matrix.node, matrix.jest) || '' }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
+        include:
+          # The supported floor: engines.node >=22.12 and the jest >=29 peer range.
+          - os: ubuntu-latest
+            node: '22'
+            jest: '29'
     env:
       # Software rasterizers on GPU-less runners: Mesa llvmpipe for WebGL, Dawn's Vulkan backend on lavapipe for WebGPU.
       LIBGL_ALWAYS_SOFTWARE: '1'
@@ -29,9 +34,15 @@ jobs:
       - uses: pnpm/action-setup@v5
       - uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version: ${{ matrix.node }}
+          node-version-file: ${{ !matrix.node && '.nvmrc' || '' }}
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - if: matrix.jest
+        name: Downgrade to Jest ${{ matrix.jest }}
+        run: |
+          pnpm --filter jest-gpu --filter demo add -D jest@${{ matrix.jest }} jest-environment-node@${{ matrix.jest }} @jest/globals@${{ matrix.jest }} @types/jest@${{ matrix.jest }}
+          pnpm exec jest --version
       - run: pnpm test:workflow
       - run: pnpm lint
       - run: pnpm tsc
@@ -42,11 +53,11 @@ jobs:
       - run: pnpm package:check
       - uses: actions/upload-artifact@v4
         with:
-          name: quality-reports-${{ matrix.os }}
+          name: quality-reports-${{ matrix.os }}${{ matrix.jest && format('-node{0}-jest{1}', matrix.node, matrix.jest) || '' }}
           path: |
             coverage/
       - name: Upload coverage
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' && !matrix.jest
         uses: codecov/codecov-action@v5
         with:
           files: coverage/lcov.info

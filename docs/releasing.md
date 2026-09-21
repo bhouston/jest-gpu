@@ -35,9 +35,9 @@ The `Release` workflow runs only through `workflow_dispatch` on `main`:
 
 ## Version baseline
 
-Packages start at `0.0.0` with no tags. The first release of each package will be computed
-by semantic-release from its commits; a `feat` commit yields `1.0.0`. To start lower, create a
-baseline tag such as `jest-environment-webgpu-node-v0.1.0` on the commit that was manually published.
+Both packages were published manually at `0.1.0` and tagged `<package>-v0.1.0`; semantic-release
+computes every later version from the commits since that package's latest tag. The source
+`version` field is not bumped by releases.
 
 ## Recovery
 

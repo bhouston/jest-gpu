@@ -2,7 +2,7 @@ import { ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, Scene, Vector3 
 import { expect, it } from '@jest/globals';
 
 // Baby step 5: Babylon.js WebGL Engine renders into the same real GL context; read pixels back to
-// prove the lit box actually rendered, no screenshot matcher (see CONTRIBUTING).
+// prove the lit box actually rendered, no screenshot matcher (see the root README).
 //
 // @babylonjs/core defines a `_native` accessor property on `self` as a module-load side effect
 // (BabylonNative detection), guarded by `!hasOwnProperty(self, '_native')`. jest-environment-webgl-node

@@ -1,5 +1,4 @@
 import { TestEnvironment } from 'jest-environment-node';
-import { create, globals } from 'webgpu';
 import { createCanvas, HeadlessCanvas } from './canvas.js';
 
 type JestEnvironmentConfig = ConstructorParameters<typeof TestEnvironment>[0];
@@ -46,8 +45,10 @@ const domShims = (): Record<string, unknown> => {
  * tests can rely on `createCanvas` being a global; ESM tests can also `import` it from this package.
  */
 export default class WebgpuEnvironment extends TestEnvironment {
-  #added: string[];
-  #navigator: { gpu?: GPU };
+  #added: string[] = [];
+  #navigator: { gpu?: GPU } = {};
+  #nativeAdded: boolean;
+  #dawnOptions: string[] | undefined;
 
   constructor(config: JestEnvironmentConfig, context: EnvironmentContext) {
     super(config, context);
@@ -58,8 +59,8 @@ export default class WebgpuEnvironment extends TestEnvironment {
     // a Proxy over a vm context, and reads of freshly-added properties from outside the sandbox
     // (as this constructor runs) don't go through the fast path those use. getOwnPropertyNames is
     // unaffected, so use that instead.
-    const nativeAdded = !Object.getOwnPropertyNames(this.global).includes('_native');
-    if (nativeAdded) {
+    this.#nativeAdded = !Object.getOwnPropertyNames(this.global).includes('_native');
+    if (this.#nativeAdded) {
       Object.defineProperty(this.global, '_native', {
         value: undefined,
         writable: true,
@@ -67,14 +68,25 @@ export default class WebgpuEnvironment extends TestEnvironment {
         enumerable: false,
       });
     }
+    this.#dawnOptions = config.projectConfig.testEnvironmentOptions.dawnOptions as string[] | undefined;
+  }
+
+  // `webgpu` is ESM-only. Loading it via a dynamic import here (rather than a static top-level
+  // import) keeps it out of this module's own top-level module graph, so a CommonJS test file's
+  // `require('jest-environment-webgpu-node')` - which only needs `createCanvas` - never forces
+  // Jest's sandboxed CJS loader to load an ESM-only dependency (jestjs/jest#15716). This method
+  // itself runs outside that sandbox, through Jest's own environment setup, where Node's native
+  // `import()` always works.
+  override async setup(): Promise<void> {
+    await super.setup();
+    const { create, globals } = await import('webgpu');
     const global = this.global as unknown as Record<string, unknown>;
     const shims = { ...globals, ...domShims(), createCanvas } as Record<string, unknown>;
     this.#added = Object.keys(shims).filter((key) => !(key in global));
     for (const key of this.#added) global[key] = shims[key];
-    if (nativeAdded) this.#added.push('_native');
+    if (this.#nativeAdded) this.#added.push('_native');
     this.#navigator = (global.navigator ??= {}) as { gpu?: GPU };
-    const dawnOptions = config.projectConfig.testEnvironmentOptions.dawnOptions as string[] | undefined;
-    Object.defineProperty(this.#navigator, 'gpu', { value: create(dawnOptions ?? []), configurable: true });
+    Object.defineProperty(this.#navigator, 'gpu', { value: create(this.#dawnOptions ?? []), configurable: true });
   }
 
   override async teardown(): Promise<void> {

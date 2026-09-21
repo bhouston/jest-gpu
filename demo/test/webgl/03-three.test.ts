@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { expect, it } from '@jest/globals';
 
 // Baby step 4: three.js WebGLRenderer draws into the environment's real GL context; read pixels
-// back to prove it actually rendered (no screenshot matcher here, see CONTRIBUTING).
+// back to prove it actually rendered (no screenshot matcher here, see the root README).
 it('renders a three.js torus knot with WebGLRenderer', () => {
   const size = 256;
   const canvas = document.createElement('canvas');

@@ -64,13 +64,17 @@ const domShims = (
  */
 export default class WebgpuEnvironment extends TestEnvironment {
   #added: string[] = [];
-  #navigator: { gpu?: GPU } = {};
+  #hostNavigator: PropertyDescriptor | undefined;
   #nativeAdded: boolean;
   #dawnOptions: string[] | undefined;
   #animationFrames = new Map<TimerHandle, typeof clearTimeout>();
 
   constructor(config: JestEnvironmentConfig, context: EnvironmentContext) {
-    super(config, context);
+    // jest-environment-node assigns every `testEnvironmentOptions` entry onto the sandbox global, so
+    // strip this environment's own option first to keep `dawnOptions` off `globalThis`.
+    const { dawnOptions, ...testEnvironmentOptions } = config.projectConfig.testEnvironmentOptions;
+    super({ ...config, projectConfig: { ...config.projectConfig, testEnvironmentOptions } }, context);
+    this.#dawnOptions = dawnOptions as string[] | undefined;
     // @babylonjs/core defines a `_native` accessor on `self` at module load; on Jest's proxied
     // sandbox global that defineProperty violates a proxy invariant, so pre-seed the property to
     // satisfy Babylon's hasOwnProperty guard.
@@ -87,7 +91,6 @@ export default class WebgpuEnvironment extends TestEnvironment {
         enumerable: false,
       });
     }
-    this.#dawnOptions = config.projectConfig.testEnvironmentOptions.dawnOptions as string[] | undefined;
   }
 
   // `webgpu` is ESM-only. Loading it via a dynamic import here (rather than a static top-level
@@ -104,15 +107,30 @@ export default class WebgpuEnvironment extends TestEnvironment {
     this.#added = Object.keys(shims).filter((key) => !(key in global));
     for (const key of this.#added) global[key] = shims[key];
     if (this.#nativeAdded) this.#added.push('_native');
-    this.#navigator = (global.navigator ??= {}) as { gpu?: GPU };
-    Object.defineProperty(this.#navigator, 'gpu', { value: create(this.#dawnOptions ?? []), configurable: true });
+    // jest-environment-node hands the sandbox Node's own `navigator` by reference, so adding `gpu` to it
+    // would leak onto the host process and be shared by every environment in this worker. Give the
+    // sandbox its own proxy instead; `Reflect.get(target, key, target)` keeps Node's private-field
+    // getters (hardwareConcurrency, userAgent, ...) working through it.
+    const gpu = create(this.#dawnOptions ?? []);
+    const host = (global.navigator ?? {}) as object;
+    this.#hostNavigator = Object.getOwnPropertyDescriptor(global, 'navigator');
+    Object.defineProperty(global, 'navigator', {
+      value: new Proxy(host, {
+        get: (target, key) => (key === 'gpu' ? gpu : Reflect.get(target, key, target)),
+        has: (target, key) => key === 'gpu' || Reflect.has(target, key),
+      }),
+      configurable: true,
+      enumerable: true,
+      writable: true,
+    });
   }
 
   override async teardown(): Promise<void> {
     const global = this.global as unknown as Record<string, unknown>;
     for (const [handle, clear] of this.#animationFrames) clear(handle);
     this.#animationFrames.clear();
-    delete this.#navigator.gpu;
+    if (this.#hostNavigator) Object.defineProperty(global, 'navigator', this.#hostNavigator);
+    else delete global.navigator;
     for (const key of this.#added) delete global[key];
     await super.teardown();
   }

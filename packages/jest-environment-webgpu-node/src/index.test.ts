@@ -107,15 +107,39 @@ it('cancels a real animation frame after switching the sandbox to fake timers', 
   await env.teardown();
 });
 
-it('reuses an existing navigator object and defaults dawnOptions when omitted', async () => {
+it('gives the sandbox its own navigator without touching the host, and defaults dawnOptions when omitted', async () => {
   const env = await makeEnv({});
   const global = env.global as any;
-  const navigator = global.navigator;
-  expect(navigator).toBeDefined();
   expect(typeof global.navigator.gpu.requestAdapter).toBe('function');
+  expect('gpu' in global.navigator).toBe(true);
+  expect(global.navigator.hardwareConcurrency).toBe(navigator.hardwareConcurrency);
+  expect(global.navigator).not.toBe(navigator);
+  expect((navigator as { gpu?: unknown }).gpu).toBeUndefined();
+  expect(Object.getOwnPropertyNames(global)).not.toContain('dawnOptions');
+  expect(global.dawnOptions).toBeUndefined();
+
+  const other = await makeEnv({});
+  await other.teardown();
+  expect(typeof global.navigator.gpu.requestAdapter).toBe('function');
+
   await env.teardown();
   expect(global.navigator).toBe(navigator);
   expect(global.navigator.gpu).toBeUndefined();
+});
+
+it('removes navigator on teardown when the sandbox had none', async () => {
+  const env = new WebgpuEnvironment({ projectConfig: { testEnvironmentOptions: {} } as any, globalConfig: {} as any }, {
+    console,
+    docblockPragmas: {},
+    testPath: import.meta.filename,
+  } as any);
+  const global = env.global as any;
+  delete global.navigator; // as on Node versions without a navigator global
+  await env.setup();
+  expect(typeof global.navigator.gpu.requestAdapter).toBe('function');
+  expect(global.navigator.hardwareConcurrency).toBeUndefined();
+  await env.teardown();
+  expect(Object.getOwnPropertyNames(global)).not.toContain('navigator');
 });
 
 // Assertions here use `Object.getOwnPropertyNames` rather than `Object.hasOwn`/`in`: reads of a

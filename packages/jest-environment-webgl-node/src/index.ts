@@ -80,16 +80,27 @@ const DOM_NAMES = [
 
 let initializedWith: InitOptions | undefined;
 
-function initialize(options: InitOptions): void {
-  if (!options.api && !options.backend) return;
-  if (initializedWith && (options.api !== initializedWith.api || options.backend !== initializedWith.backend)) {
+/**
+ * The native EGL display is process-wide and node-webgl's `init()` is a no-op once it exists (the first
+ * context creates it lazily), so compare explicit options against the live display rather than only
+ * against what this module itself initialized.
+ */
+function initialize({ api, backend }: InitOptions): void {
+  if (!api && !backend) return;
+  if (initializedWith && initializedWith.api === api && initializedWith.backend === backend) return;
+  const display = nodeWebGL.getDisplayInfo();
+  const mismatch =
+    display &&
+    ((backend && backend !== 'default' && backend !== display.backend) ||
+      (api && api !== 'auto' && api !== display.api));
+  if (mismatch) {
     throw new Error(
-      `node-webgl is already initialized with ${JSON.stringify(initializedWith)}; ` +
-        `cannot switch this Jest worker to ${JSON.stringify(options)}`,
+      `node-webgl is already initialized with ${JSON.stringify({ api: display.api, backend: display.backend })}; ` +
+        `cannot switch this Jest worker to ${JSON.stringify({ api, backend })}`,
     );
   }
-  nodeWebGL.init(options);
-  initializedWith = options;
+  nodeWebGL.init({ api, backend });
+  initializedWith = { api, backend };
 }
 
 /** Capture a fresh node-webgl DOM while restoring every host descriptor after installation. */

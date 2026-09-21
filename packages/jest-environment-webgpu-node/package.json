@@ -30,7 +30,7 @@
     "dist/**/*.d.cts.map",
     "dist/**/*.d.mts",
     "dist/**/*.d.mts.map",
-    "src/globals.d.ts",
+    "globals.d.ts",
     "CHANGELOG.md"
   ],
   "type": "module",
@@ -49,7 +49,7 @@
       }
     },
     "./globals": {
-      "types": "./src/globals.d.ts"
+      "types": "./globals.d.ts"
     }
   },
   "publishConfig": {

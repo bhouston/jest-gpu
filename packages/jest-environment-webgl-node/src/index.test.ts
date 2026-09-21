@@ -68,4 +68,33 @@ describe('WebglEnvironment', () => {
     await envA.teardown();
     await envB.teardown();
   });
+
+  // Assertions here use `Object.getOwnPropertyNames` rather than `Object.hasOwn`/`in`: reads of a
+  // freshly-added property from outside jest-environment-node's proxied sandbox global (as here)
+  // give false negatives for those, though the property is genuinely present (and visible from
+  // inside the sandbox, which is what matters for Babylon.js's own hasOwnProperty guard).
+  it('pre-seeds an own `_native` property for Babylon.js and removes it on teardown', async () => {
+    const env = makeEnv();
+    const g = env.global as unknown as Record<string, unknown>;
+    expect(Object.getOwnPropertyNames(g)).toContain('_native');
+    expect(g._native).toBeUndefined();
+
+    await env.teardown();
+
+    expect(Object.getOwnPropertyNames(g)).not.toContain('_native');
+  });
+
+  it('leaves a pre-existing `_native` property alone', async () => {
+    // `testEnvironmentOptions` is assigned onto the sandbox global before jest-environment-node's
+    // constructor returns, so this simulates `_native` already being an own property when our
+    // constructor's guard runs, as it would be if some earlier module had defined it.
+    const env = makeEnv({ _native: 'preexisting' });
+    const g = env.global as unknown as Record<string, unknown>;
+    expect(g._native).toBe('preexisting');
+
+    await env.teardown();
+
+    expect(Object.getOwnPropertyNames(g)).toContain('_native');
+    expect(g._native).toBe('preexisting');
+  });
 });

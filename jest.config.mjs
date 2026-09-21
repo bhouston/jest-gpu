@@ -9,17 +9,14 @@ export default {
       ...project,
       displayName: 'demo-webgl',
       rootDir: 'demo',
-      // Resolving the bare package name fails: its `exports` map only has an ESM "import"
-      // condition, and Jest's testEnvironment loader resolves it with CJS require(). Point at
-      // the built entry directly instead.
-      testEnvironment: '<rootDir>/../packages/jest-environment-webgl-node/dist/index.js',
+      testEnvironment: 'jest-environment-webgl-node',
       testMatch: ['<rootDir>/test/webgl/**/*.test.ts'],
     },
     {
       ...project,
       displayName: 'demo-webgpu',
       rootDir: 'demo',
-      testEnvironment: '<rootDir>/../packages/jest-environment-webgpu-node/dist/index.js',
+      testEnvironment: 'jest-environment-webgpu-node',
       testMatch: ['<rootDir>/test/webgpu/**/*.test.ts'],
     },
   ],

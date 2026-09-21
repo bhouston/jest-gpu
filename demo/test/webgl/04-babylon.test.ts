@@ -1,18 +1,13 @@
+import { ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, Scene, Vector3 } from '@babylonjs/core';
 import { expect, it } from '@jest/globals';
 
 // Baby step 5: Babylon.js WebGL Engine renders into the same real GL context; read pixels back to
 // prove the lit box actually rendered, no screenshot matcher (see CONTRIBUTING).
+//
+// @babylonjs/core defines a `_native` accessor property on `self` as a module-load side effect
+// (BabylonNative detection), guarded by `!hasOwnProperty(self, '_native')`. jest-environment-webgl-node
+// pre-seeds that own property on the sandbox global, so the static import above loads cleanly.
 it('renders a lit box with Babylon.js WebGL Engine', async () => {
-  // @babylonjs/core defines a `_native` accessor property on `self` as a module-load side effect
-  // (BabylonNative detection), guarded by `!hasOwnProperty(self, '_native')`. Jest's sandbox
-  // global is a Proxy over the VM context global, and that defineProperty call fails there with
-  // "'defineProperty' on proxy: trap returned truish for adding property '_native' that is
-  // incompatible with the existing property in the proxy target". Pre-seeding the own property
-  // satisfies the guard and skips the failing defineProperty. Must run before the (hoisted)
-  // static import evaluates babylon's module, hence the dynamic import below.
-  (globalThis as unknown as { _native?: unknown })._native = undefined;
-  const { ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, Scene, Vector3 } = await import('@babylonjs/core');
-
   const size = 256;
   const canvas = document.createElement('canvas');
   canvas.width = size;

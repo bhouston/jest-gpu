@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "orta.vscode-jest",
+    "oxc.oxc-vscode",
+    "github.vscode-github-actions",
+    "typescriptteam.native-preview"
+  ]
+}

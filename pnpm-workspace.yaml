@@ -1,0 +1,10 @@
+packages:
+  - 'packages/*'
+  - 'demo'
+allowBuilds:
+  '@onirenaud/node-webgl': true
+  '@vgpu/adapter-node': false
+  webgpu: true
+  '@swc/core': true
+  '@parcel/watcher': true
+  unrs-resolver: true

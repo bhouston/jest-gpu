@@ -84,16 +84,27 @@ it('runs animation frames through Jest fake timers and supports cancellation', a
 it('cancels outstanding animation frames during teardown', async () => {
   const env = await makeEnv();
   const global = env.global as any;
-  const timers = env.fakeTimersModern!;
-  timers.useFakeTimers();
-  const clearTimeout = jest.fn(global.clearTimeout);
-  global.clearTimeout = clearTimeout;
-  global.requestAnimationFrame(() => {});
-  expect(timers.getTimerCount()).toBe(1);
+  const callback = jest.fn();
+  global.requestAnimationFrame(callback);
 
   await env.teardown();
+  await new Promise((resolve) => setTimeout(resolve, 30));
 
-  expect(clearTimeout).toHaveBeenCalledTimes(1);
+  expect(callback).not.toHaveBeenCalled();
+});
+
+it('cancels a real animation frame after switching the sandbox to fake timers', async () => {
+  const env = await makeEnv();
+  const global = env.global as any;
+  const callback = jest.fn();
+  const handle = global.requestAnimationFrame(callback);
+
+  env.fakeTimersModern!.useFakeTimers();
+  global.cancelAnimationFrame(handle);
+  await new Promise((resolve) => setTimeout(resolve, 30));
+
+  expect(callback).not.toHaveBeenCalled();
+  await env.teardown();
 });
 
 it('reuses an existing navigator object and defaults dawnOptions when omitted', async () => {

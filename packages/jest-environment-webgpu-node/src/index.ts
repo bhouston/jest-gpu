@@ -51,10 +51,27 @@ export default class WebgpuEnvironment extends TestEnvironment {
 
   constructor(config: JestEnvironmentConfig, context: EnvironmentContext) {
     super(config, context);
+    // @babylonjs/core defines a `_native` accessor on `self` at module load; on Jest's proxied
+    // sandbox global that defineProperty violates a proxy invariant, so pre-seed the property to
+    // satisfy Babylon's hasOwnProperty guard.
+    // `Object.hasOwn`/`in` report false negatives here: jest-environment-node's sandbox global is
+    // a Proxy over a vm context, and reads of freshly-added properties from outside the sandbox
+    // (as this constructor runs) don't go through the fast path those use. getOwnPropertyNames is
+    // unaffected, so use that instead.
+    const nativeAdded = !Object.getOwnPropertyNames(this.global).includes('_native');
+    if (nativeAdded) {
+      Object.defineProperty(this.global, '_native', {
+        value: undefined,
+        writable: true,
+        configurable: true,
+        enumerable: false,
+      });
+    }
     const global = this.global as unknown as Record<string, unknown>;
     const shims = { ...globals, ...domShims(), createCanvas } as Record<string, unknown>;
     this.#added = Object.keys(shims).filter((key) => !(key in global));
     for (const key of this.#added) global[key] = shims[key];
+    if (nativeAdded) this.#added.push('_native');
     this.#navigator = (global.navigator ??= {}) as { gpu?: GPU };
     const dawnOptions = config.projectConfig.testEnvironmentOptions.dawnOptions as string[] | undefined;
     Object.defineProperty(this.#navigator, 'gpu', { value: create(dawnOptions ?? []), configurable: true });

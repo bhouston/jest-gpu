@@ -1,5 +1,9 @@
 # jest-environment-webgpu-node
 
+[![npm version][npm-badge]][npm-url]
+[![npm downloads][downloads-badge]][npm-url]
+[![Coverage][coverage-badge]][coverage-url]
+
 Real, headless WebGPU inside Jest, with no browser. Powered by Google's Dawn through the
 [`webgpu`](https://github.com/dawn-gpu/node-webgpu) npm package.
 
@@ -84,3 +88,9 @@ Created by [Ben Houston](https://ben3d.ca) and sponsored by [Land of Assets](htt
 ## License
 
 MIT
+
+[npm-badge]: https://img.shields.io/npm/v/jest-environment-webgpu-node.svg
+[npm-url]: https://www.npmjs.com/package/jest-environment-webgpu-node
+[downloads-badge]: https://img.shields.io/npm/dm/jest-environment-webgpu-node.svg
+[coverage-badge]: https://codecov.io/gh/bhouston/jest-gpu/graph/badge.svg
+[coverage-url]: https://codecov.io/gh/bhouston/jest-gpu

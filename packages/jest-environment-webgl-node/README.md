@@ -1,5 +1,9 @@
 # jest-environment-webgl-node
 
+[![npm version][npm-badge]][npm-url]
+[![npm downloads][downloads-badge]][npm-url]
+[![Coverage][coverage-badge]][coverage-url]
+
 Real, headless WebGL 1 and WebGL 2 inside Jest, with no browser. Powered by
 [`@onirenaud/node-webgl`](https://github.com/RenaudRohlinger/node-webgl) (Chrome's ANGLE, statically linked).
 
@@ -80,3 +84,9 @@ Created by [Ben Houston](https://ben3d.ca) and sponsored by [Land of Assets](htt
 ## License
 
 MIT
+
+[npm-badge]: https://img.shields.io/npm/v/jest-environment-webgl-node.svg
+[npm-url]: https://www.npmjs.com/package/jest-environment-webgl-node
+[downloads-badge]: https://img.shields.io/npm/dm/jest-environment-webgl-node.svg
+[coverage-badge]: https://codecov.io/gh/bhouston/jest-gpu/graph/badge.svg
+[coverage-url]: https://codecov.io/gh/bhouston/jest-gpu

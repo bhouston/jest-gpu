@@ -4,7 +4,10 @@
 [![npm downloads][downloads-badge]][npm-url]
 [![Coverage][coverage-badge]][coverage-url]
 
-Real, headless WebGPU inside Jest, with no browser. Powered by Google's Dawn through the
+Real, headless WebGPU inside Jest, with no browser. Native GPU testing runs up to 2.4x faster
+than the same tests in a browser — see
+[the write-up](https://ben3d.ca/blog/native-gpu-testing-for-vitest-and-jest) for details.
+Powered by Google's Dawn through the
 [`webgpu`](https://github.com/dawn-gpu/node-webgpu) npm package.
 
 The environment puts `navigator.gpu` and every `GPU*` class and constant (`GPUBufferUsage`,

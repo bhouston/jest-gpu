@@ -4,7 +4,9 @@
 [![npm downloads][downloads-badge]][npm-url]
 [![Coverage][coverage-badge]][coverage-url]
 
-Real, headless WebGL 1 and WebGL 2 inside Jest, with no browser. Powered by
+Real, headless WebGL 1 and WebGL 2 inside Jest, with no browser. Native GPU testing runs up to
+2.4x faster than the same tests in a browser — see
+[the write-up](https://ben3d.ca/blog/native-gpu-testing-for-vitest-and-jest) for details. Powered by
 [`@onirenaud/node-webgl`](https://github.com/RenaudRohlinger/node-webgl) (Chrome's ANGLE, statically linked).
 
 The environment installs `window`, `document`, `HTMLCanvasElement`, `Image`, `requestAnimationFrame`,

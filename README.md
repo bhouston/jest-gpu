@@ -4,6 +4,8 @@
 [![Coverage][coverage-badge]][coverage-url]
 
 Run real WebGL and WebGPU code inside plain Jest, with no browser, no Playwright and no mocks.
+Native GPU testing runs up to 2.4x faster than the same tests in a browser — see
+[the write-up](https://ben3d.ca/blog/native-gpu-testing-for-vitest-and-jest) for details.
 Two Jest environments put a GPU-backed context on the test's sandbox global, so three.js,
 Babylon.js and plain WebGL/WebGPU code run unchanged.
 

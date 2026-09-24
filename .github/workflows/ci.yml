@@ -54,6 +54,17 @@ jobs:
       - run: pnpm test:consumer
       - run: pnpm audit --audit-level=high
       - run: pnpm package:check
+      - name: Verify packed tarballs include dist
+        run: |
+          for pkg in packages/*/; do
+            output=$(cd "$pkg" && pnpm pack --dry-run 2>&1)
+            for f in dist/index.cjs dist/index.mjs; do
+              echo "$output" | grep -qF "$f" || {
+                echo "::error::$f missing from the packed tarball for $pkg; the publish step would ship a broken package."
+                exit 1
+              }
+            done
+          done
       - uses: actions/upload-artifact@v4
         with:
           name: quality-reports-${{ matrix.os }}${{ matrix.jest && format('-node{0}-jest{1}', matrix.node, matrix.jest) || '' }}

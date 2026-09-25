@@ -2,6 +2,7 @@
 
 [![Tests][tests-badge]][tests-url]
 [![Coverage][coverage-badge]][coverage-url]
+[![Discord][discord-badge]][discord-url]
 
 Run real WebGL and WebGPU code inside plain Jest, with no browser, no Playwright and no mocks.
 Native GPU testing runs up to 2.4x faster than the same tests in a browser — see
@@ -203,3 +204,5 @@ MIT
 [tests-url]: https://github.com/bhouston/jest-gpu/actions/workflows/ci.yml
 [coverage-badge]: https://codecov.io/gh/bhouston/jest-gpu/graph/badge.svg
 [coverage-url]: https://codecov.io/gh/bhouston/jest-gpu
+[discord-badge]: https://img.shields.io/badge/Discord-Join%20Chat-5865F2?logo=discord&logoColor=white
+[discord-url]: https://discord.gg/fwupDN493R

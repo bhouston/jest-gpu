@@ -3,6 +3,7 @@
 [![npm version][npm-badge]][npm-url]
 [![npm downloads][downloads-badge]][npm-url]
 [![Coverage][coverage-badge]][coverage-url]
+[![Discord][discord-badge]][discord-url]
 
 Real, headless WebGPU inside Jest, with no browser. Native GPU testing runs up to 2.4x faster
 than the same tests in a browser — see
@@ -97,3 +98,5 @@ MIT
 [downloads-badge]: https://img.shields.io/npm/dm/jest-environment-webgpu-node.svg
 [coverage-badge]: https://codecov.io/gh/bhouston/jest-gpu/graph/badge.svg
 [coverage-url]: https://codecov.io/gh/bhouston/jest-gpu
+[discord-badge]: https://img.shields.io/badge/Discord-Join%20Chat-5865F2?logo=discord&logoColor=white
+[discord-url]: https://discord.gg/fwupDN493R

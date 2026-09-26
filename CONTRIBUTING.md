@@ -43,14 +43,13 @@ Merging a PR closes its issue but does not publish a release.
 Merges to `main` never publish by themselves. When ready to release, the
 maintainer manually dispatches the `Release` workflow on `main`:
 `gh workflow run release.yml --ref main`. It repeats all quality gates before
-semantic-release computes the next version, generates the changelog, tags the
-release, publishes to npm with OIDC, and creates a GitHub Release. Each package under
-`packages/` is released independently by `semantic-release-monorepo`, which only
-considers commits touching that package and tags as `<package>-v<version>`. If there
-are no releasable changes, it publishes nothing. Generated versions and
-changelogs are release artifacts; the source package version is not bumped by
-the release bot. Pass `-f dry_run=true` to validate a release without
-publishing. See [release setup](docs/releasing.md) for npm and GitHub
-configuration, the initial tag baseline, and rollout to other repositories.
+semantic-release computes the next version, tags the release, publishes to npm
+with OIDC, and creates a GitHub Release with each package's tarball attached.
+All packages under `packages/` are released together in lockstep, sharing a
+single version stream computed once at the repo root and tagged `v<version>`.
+If there are no releasable changes, it publishes nothing. The source package
+version is not bumped by the release bot. Pass `-f dry_run=true` to validate a
+release without publishing. See [release setup](docs/releasing.md) for npm and
+GitHub configuration and the version baseline.
 
 Do not run `pnpm release` or `npm publish` locally as part of normal development.

@@ -1,6 +1,6 @@
 {
   "name": "jest-environment-webgpu-node",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Jest environment that provides real headless WebGPU (Dawn via the webgpu package) in Node",
   "keywords": [
     "dawn",
@@ -30,8 +30,7 @@
     "dist/**/*.d.cts.map",
     "dist/**/*.d.mts",
     "dist/**/*.d.mts.map",
-    "globals.d.ts",
-    "CHANGELOG.md"
+    "globals.d.ts"
   ],
   "type": "module",
   "main": "./dist/index.cjs",

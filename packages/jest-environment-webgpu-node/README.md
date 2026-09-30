@@ -110,7 +110,7 @@ MIT
 [npm-badge]: https://img.shields.io/npm/v/jest-environment-webgpu-node.svg
 [npm-url]: https://www.npmjs.com/package/jest-environment-webgpu-node
 [downloads-badge]: https://img.shields.io/npm/dm/jest-environment-webgpu-node.svg
-[coverage-badge]: https://codecov.io/gh/bhouston/jest-gpu/graph/badge.svg
+[coverage-badge]: https://codecov.io/gh/bhouston/jest-gpu/branch/main/graph/badge.svg
 [coverage-url]: https://codecov.io/gh/bhouston/jest-gpu
 [discord-badge]: https://img.shields.io/badge/Discord-Join%20Chat-5865F2?logo=discord&logoColor=white
 [discord-url]: https://discord.gg/fwupDN493R

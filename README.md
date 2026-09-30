@@ -202,7 +202,7 @@ MIT
 
 [tests-badge]: https://github.com/bhouston/jest-gpu/actions/workflows/ci.yml/badge.svg
 [tests-url]: https://github.com/bhouston/jest-gpu/actions/workflows/ci.yml
-[coverage-badge]: https://codecov.io/gh/bhouston/jest-gpu/graph/badge.svg
+[coverage-badge]: https://codecov.io/gh/bhouston/jest-gpu/branch/main/graph/badge.svg
 [coverage-url]: https://codecov.io/gh/bhouston/jest-gpu
 [discord-badge]: https://img.shields.io/badge/Discord-Join%20Chat-5865F2?logo=discord&logoColor=white
 [discord-url]: https://discord.gg/fwupDN493R

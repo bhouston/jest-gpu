@@ -71,7 +71,7 @@ jobs:
           path: |
             coverage/
       - name: Upload coverage
-        if: runner.os == 'macOS' && !matrix.jest
+        if: ${{ !cancelled() && runner.os == 'macOS' && !matrix.jest && hashFiles('coverage/lcov.info') != '' }}
         uses: codecov/codecov-action@v5
         with:
           files: coverage/lcov.info

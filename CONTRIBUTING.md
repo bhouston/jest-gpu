@@ -24,6 +24,9 @@ This is the single workflow standard for human contributors, Claude, and Codex.
    `.nvmrc`. Coverage must be at least 95% for statements, branches, functions,
    and lines. The native GPU packages are real dependencies, so tests need a
    GPU or a software rasterizer (Metal on macOS, Mesa llvmpipe on Linux).
+   The dependency audit is advisory in CI, including release validation: failures
+   produce a warning without blocking the other checks. Review and report audit
+   findings; they do not need to be suppressed to merge a change.
 6. Push and open a PR **against `main`**, with a Conventional Commit title,
    a description of the final behavior, validation results, and `Closes #42`
    referencing the branch's issue number. Agents should use

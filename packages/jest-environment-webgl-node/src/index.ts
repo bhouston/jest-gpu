@@ -154,6 +154,7 @@ function localFetch(baseDir: string, nativeFetch: typeof fetch): typeof fetch {
 export default class WebglEnvironment extends TestEnvironment {
   private readonly added: string[] = [];
   private readonly animationFrames = new Map<ReturnType<typeof setTimeout>, typeof clearTimeout>();
+  private readonly canvases = new Set<nodeWebGL.Canvas>();
 
   constructor(config: JestEnvironmentConfig, context: EnvironmentContext) {
     const options = config.projectConfig.testEnvironmentOptions as WebglNodeOptions;
@@ -182,6 +183,24 @@ export default class WebglEnvironment extends TestEnvironment {
     g.window = g;
     g.self = g;
     (g.document as Record<string, unknown>).defaultView = g;
+
+    // Native contexts are held in node-webgl's process-wide registry, without a GC finalizer.
+    // Keep environment-created canvases alive until we can explicitly release their contexts.
+    const track = <T>(value: T): T => {
+      if (value instanceof nodeWebGL.Canvas) this.canvases.add(value);
+      return value;
+    };
+    for (const name of ['HTMLCanvasElement', 'OffscreenCanvas'] as const) {
+      const Canvas = g[name] as typeof nodeWebGL.Canvas;
+      g[name] = new Proxy(Canvas, {
+        construct: (target, args, newTarget) => track(Reflect.construct(target, args, newTarget)),
+      });
+    }
+    const document = g.document as Record<'createElement' | 'createElementNS', (...args: unknown[]) => unknown>;
+    for (const name of ['createElement', 'createElementNS'] as const) {
+      const create = document[name];
+      document[name] = (...args: unknown[]) => track(create.apply(document, args));
+    }
 
     const events = new EventTarget();
     g.addEventListener = events.addEventListener.bind(events);
@@ -212,6 +231,8 @@ export default class WebglEnvironment extends TestEnvironment {
     const g = this.global as unknown as Sandbox;
     for (const [id, clear] of this.animationFrames) clear(id);
     this.animationFrames.clear();
+    for (const canvas of this.canvases) canvas.dispose();
+    this.canvases.clear();
     for (const key of this.added) delete g[key];
     await super.teardown();
   }

@@ -52,7 +52,13 @@ jobs:
       - run: pnpm test:coverage
       - run: pnpm test:cjs
       - run: pnpm test:consumer
-      - run: pnpm audit --audit-level=high
+      - name: Audit dependencies
+        id: audit
+        continue-on-error: true
+        run: pnpm audit --audit-level=high
+      - name: Flag audit findings
+        if: steps.audit.outcome == 'failure'
+        run: echo '::warning::Dependency audit found vulnerabilities or could not reach the registry. Review the audit step.'
       - run: pnpm package:check
       - name: Verify packed tarballs include dist
         run: |

@@ -55,6 +55,11 @@ animation-frame queue. Animation frames use Jest's sandbox timers, so `jest.useF
 `jest.advanceTimersByTime()` control them; pending frames are cancelled during environment
 teardown.
 
+Teardown also disposes canvases created by `document.createElement`, `document.createElementNS`,
+`new HTMLCanvasElement` and `new OffscreenCanvas`, releasing their native contexts and GPU resources.
+Canvases are retained until teardown; call `canvas.dispose()` when finished using one. Canvases or
+contexts created directly through imports from `@onirenaud/node-webgl` remain the caller's responsibility.
+
 File fetching is enabled by default. Relative paths resolve from that test file's `baseDir`
 (default: `process.cwd()`), while HTTP, data and blob URLs use Node's native `fetch`. Set
 `fetch: false` to use native fetch for every URL. The environment never replaces host globals.

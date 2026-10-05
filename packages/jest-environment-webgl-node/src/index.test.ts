@@ -14,6 +14,58 @@ function makeEnv(testEnvironmentOptions: Record<string, unknown> = {}) {
 }
 
 describe('WebglEnvironment', () => {
+  it('destroys native contexts from DOM factories and canvas constructors on teardown', async () => {
+    const env = makeEnv();
+    const g = env.global as unknown as Record<string, any>;
+    const canvases = [
+      g.document.createElement('CANVAS'),
+      g.document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas'),
+      new g.HTMLCanvasElement(4, 4),
+      new g.OffscreenCanvas(4, 4),
+      g.document.createElement('canvas'),
+    ];
+    const contexts = canvases.map((canvas) => canvas.getContext('webgl2'));
+    expect(contexts.every((gl) => gl && !gl.isContextLost())).toBe(true);
+    expect(canvases.every((canvas) => canvas instanceof g.HTMLCanvasElement)).toBe(true);
+    // A caller may dispose a canvas before environment teardown.
+    canvases[0].dispose();
+    g.document.createElement('div');
+
+    await env.teardown();
+
+    expect(contexts.every((gl) => gl.isContextLost())).toBe(true);
+  });
+
+  it('reuses native context slots across repeated environment lifecycles', async () => {
+    const handles: number[] = [];
+    for (let cycle = 0; cycle < 6; cycle++) {
+      const env = makeEnv();
+      const canvas = (env.global as any).document.createElement('canvas');
+      const gl = canvas.getContext('webgl2');
+      expect(gl).toBeTruthy();
+      handles.push(gl._handle);
+      await env.teardown();
+      expect(gl.isContextLost()).toBe(true);
+    }
+    expect(new Set(handles).size).toBe(1);
+  });
+
+  it('only destroys canvases owned by the environment being torn down', async () => {
+    const a = makeEnv();
+    const b = makeEnv();
+    const glA = (a.global as any).document.createElement('canvas').getContext('webgl2');
+    const glB = (b.global as any).document.createElement('canvas').getContext('webgl2');
+    await a.teardown();
+    expect(glA.isContextLost()).toBe(true);
+    expect(glB.isContextLost()).toBe(false);
+    glB.clearColor(1, 0, 0, 1);
+    glB.clear(glB.COLOR_BUFFER_BIT);
+    const pixels = new Uint8Array(4);
+    glB.readPixels(0, 0, 1, 1, glB.RGBA, glB.UNSIGNED_BYTE, pixels);
+    expect(Array.from(pixels)).toEqual([255, 0, 0, 255]);
+    await b.teardown();
+  });
+
   it('installs the DOM shim with a real WebGL2 canvas and removes it on teardown', async () => {
     const env = makeEnv({ innerWidth: 320, api: 'auto' });
     const { window, document } = env.global as unknown as {

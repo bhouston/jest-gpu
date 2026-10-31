@@ -21,7 +21,7 @@
     "jest-environment-webgl-node": "workspace:*",
     "jest-environment-webgpu-node": "workspace:*",
     "three": "^0.186.0",
-    "typescript": "^7.0.2",
+    "typescript": "7.1.0-beta",
     "vgpu": "^0.5.0"
   }
 }

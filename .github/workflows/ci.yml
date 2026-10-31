@@ -47,8 +47,8 @@ jobs:
           pnpm --filter jest-gpu --filter demo add -D jest@${{ matrix.jest }} jest-environment-node@${{ matrix.jest }} @jest/globals@${{ matrix.jest }} @types/jest@${{ matrix.jest }}
           pnpm exec jest --version
       - run: pnpm test:workflow
-      - run: pnpm lint
-      - run: pnpm tsc
+      - run: pnpm tsc # builds the packages first
+      - run: pnpm lint # type-aware lint needs the built .d.ts
       - run: pnpm test:coverage
       - run: pnpm test:cjs
       - run: pnpm test:consumer

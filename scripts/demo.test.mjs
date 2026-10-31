@@ -26,7 +26,7 @@ function run(path, executable, arguments_, env = process.env) {
   return result;
 }
 
-test('the copied demo uses only its local configuration', async () => {
+void test('the copied demo uses only its local configuration', async () => {
   const temporaryDirectory = await temporaryProject();
   for (const path of ['jest.config.mjs', 'tsconfig.json', 'globals.d.ts']) {
     await cp(join(demo, path), join(temporaryDirectory, path));
@@ -53,7 +53,7 @@ test('the copied demo uses only its local configuration', async () => {
   assert.match(result.stderr, /2 passed/);
 });
 
-test('the documented copy commands replace workspace dependency versions', async () => {
+void test('the documented copy commands replace workspace dependency versions', async () => {
   const temporaryDirectory = await temporaryProject();
   await cp(join(demo, 'package.json'), join(temporaryDirectory, 'package.json'));
   const readme = await readFile(join(demo, 'README.md'), 'utf8');
@@ -70,7 +70,7 @@ test('the documented copy commands replace workspace dependency versions', async
   assert.equal(manifest.devDependencies['jest-environment-webgpu-node'], 'latest');
 });
 
-test('the README TypeScript quickstarts type-check and run', async () => {
+void test('the README TypeScript quickstarts type-check and run', async () => {
   const readme = await readFile(join(repository, 'README.md'), 'utf8');
   const webgpu = readme.slice(readme.indexOf('## Render with WebGPU'), readme.indexOf('## Render with WebGL'));
   const webgl = readme.slice(readme.indexOf('## Render with WebGL'), readme.indexOf('## ESM note'));

@@ -6,6 +6,22 @@ import WebglEnvironment from './index.js';
 
 const listener = () => {};
 
+/** The slice of `document` these tests touch beyond what globals.d.ts declares. */
+interface TestDocument {
+  title: string;
+  body: { setAttribute(name: string, value: string): void; getAttribute(name: string): string | null };
+  defaultView: unknown;
+  dispatchEvent(event: Event): boolean;
+  addEventListener(type: string, listener: () => void): void;
+  removeEventListener(type: string, listener: () => void): void;
+}
+type TestGlobal = Omit<typeof globalThis, 'document'> & {
+  document: TestDocument;
+  addEventListener(type: string, listener: () => void): void;
+  removeEventListener(type: string, listener: () => void): void;
+  dispatchEvent(event: Event): boolean;
+};
+
 function makeEnv(testEnvironmentOptions: Record<string, unknown> = {}) {
   return new WebglEnvironment(
     { projectConfig: { testEnvironmentOptions }, globalConfig: {} } as any,
@@ -69,8 +85,8 @@ describe('WebglEnvironment', () => {
   it('installs the DOM shim with a real WebGL2 canvas and removes it on teardown', async () => {
     const env = makeEnv({ innerWidth: 320, api: 'auto' });
     const { window, document } = env.global as unknown as {
-      window: typeof globalThis;
-      document: Document;
+      window: TestGlobal;
+      document: TestDocument;
     };
 
     expect((window as unknown as { innerWidth: number }).innerWidth).toBe(320);
@@ -126,8 +142,8 @@ describe('WebglEnvironment', () => {
   it('creates isolated document and window event state for every environment', async () => {
     const envA = makeEnv({ document: 'preexisting', innerWidth: 111 });
     const envB = makeEnv({ innerWidth: 222 });
-    const a = envA.global as unknown as typeof globalThis;
-    const b = envB.global as unknown as typeof globalThis;
+    const a = envA.global as unknown as TestGlobal;
+    const b = envB.global as unknown as TestGlobal;
     const onResize = jest.fn();
     const onVisibility = jest.fn();
 
@@ -244,18 +260,19 @@ describe('WebglEnvironment', () => {
     const env = makeEnv({ frameInterval: 20 });
     const g = env.global as unknown as typeof globalThis;
     const callback = jest.fn();
-    env.fakeTimersModern.useFakeTimers();
+    const timers = env.fakeTimersModern!;
+    timers.useFakeTimers();
 
     const cancelled = g.requestAnimationFrame(callback);
     g.cancelAnimationFrame(cancelled);
-    g.cancelAnimationFrame(12345);
-    env.fakeTimersModern.advanceTimersByTime(20);
+    g.cancelAnimationFrame(12345 as never);
+    timers.advanceTimersByTime(20);
     expect(callback).not.toHaveBeenCalled();
 
     g.requestAnimationFrame(callback);
-    env.fakeTimersModern.advanceTimersByTime(19);
+    timers.advanceTimersByTime(19);
     expect(callback).not.toHaveBeenCalled();
-    env.fakeTimersModern.advanceTimersByTime(1);
+    timers.advanceTimersByTime(1);
     expect(callback).toHaveBeenCalledTimes(1);
     expect(callback).toHaveBeenCalledWith(expect.any(Number));
     await env.teardown();

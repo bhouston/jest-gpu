@@ -9,7 +9,7 @@ import { test } from 'node:test';
 const root = fileURLToPath(new URL('../', import.meta.url));
 
 for (const api of ['webgl', 'webgpu']) {
-  test(`${api}: real Jest suites isolate DOM state and support fake animation timers`, async () => {
+  void test(`${api}: real Jest suites isolate DOM state and support fake animation timers`, async () => {
     const fixture = await mkdtemp(join(tmpdir(), `jest-gpu-${api}-`));
     try {
       await writeFile(

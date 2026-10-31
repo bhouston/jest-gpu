@@ -67,6 +67,6 @@
     "jest-environment-node": ">=29 <31"
   },
   "engines": {
-    "node": ">=26"
+    "node": ">=22"
   }
 }

@@ -50,7 +50,7 @@
     "publint": "^0.3.24",
     "semantic-release": "^25.0.9",
     "tsdown": "^0.23.0",
-    "typescript": "^7.0.2"
+    "typescript": "7.1.0-beta"
   },
   "lint-staged": {
     "*.{js,ts,mjs,cjs}": [

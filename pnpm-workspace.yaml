@@ -8,3 +8,5 @@ allowBuilds:
   '@swc/core': true
   '@parcel/watcher': true
   unrs-resolver: true
+overrides:
+  '@modelcontextprotocol/server': ^2.3.0

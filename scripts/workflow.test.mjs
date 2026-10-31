@@ -11,15 +11,17 @@ const valid = {
   PR_HEAD_REPO: 'owner/repo',
   PR_REPO: 'owner/repo',
 };
-for (const [name, overrides, passes] of [
+/** @type {[string, Record<string, string>, boolean][]} */
+const policyCases = [
   ['implementation', {}, true],
   ['wrong issue', { PR_BODY: 'Closes #420' }, false],
   ['missing issue', { PR_BODY: '' }, false],
   ['unnumbered branch', { PR_HEAD: 'feat/export' }, false],
   ['wrong target branch', { PR_BASE: 'dev' }, false],
   ['fork PR', { PR_HEAD_REPO: 'fork/repo' }, false],
-]) {
-  test(`PR policy: ${name}`, () => {
+];
+for (const [name, overrides, passes] of policyCases) {
+  void test(`PR policy: ${name}`, () => {
     const result = spawnSync(process.execPath, ['scripts/check-pr-policy.mjs'], {
       env: { ...process.env, ...valid, ...overrides },
       encoding: 'utf8',
@@ -28,14 +30,16 @@ for (const [name, overrides, passes] of [
   });
 }
 
-for (const [message, expected] of [
+/** @type {[string, string | null][]} */
+const releaseCases = [
   ['fix: handle empty output', 'patch'],
   ['feat: add export', 'minor'],
   ['feat!: remove old API', 'major'],
   ['fix: change API\n\nBREAKING CHANGE: remove legacy arguments', 'major'],
   ['chore: update workflow', null],
-]) {
-  test(`release analysis: ${message.split('\n')[0]}`, async () => {
+];
+for (const [message, expected] of releaseCases) {
+  void test(`release analysis: ${message.split('\n')[0]}`, async () => {
     const actual = await analyzeCommits(config.plugins[0][1], {
       cwd: process.cwd(),
       commits: [{ hash: 'test', message }],
@@ -45,4 +49,4 @@ for (const [message, expected] of [
   });
 }
 
-test('release branch is only main', () => assert.deepEqual(config.branches, ['main']));
+void test('release branch is only main', () => assert.deepEqual(config.branches, ['main']));

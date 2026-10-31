@@ -103,6 +103,7 @@ export default class WebgpuEnvironment extends TestEnvironment {
     await super.setup();
     const { create, globals } = await import('webgpu');
     const global = this.global as unknown as SandboxGlobal;
+    // oxlint-disable-next-line typescript/no-misused-spread -- intentionally copies the own enumerable GPU* globals
     const shims = { ...globals, ...domShims(global, this.#animationFrames), createCanvas } as Record<string, unknown>;
     this.#added = Object.keys(shims).filter((key) => !(key in global));
     for (const key of this.#added) global[key] = shims[key];

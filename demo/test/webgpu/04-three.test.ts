@@ -28,5 +28,5 @@ it('renders a three.js torus knot with WebGPURenderer', async () => {
     if (data[i] !== 0 || data[i + 1] !== 0 || data[i + 2] !== 0) covered++;
   }
   expect(covered).toBeGreaterThan(width * height * 0.1);
-  renderer.dispose();
+  await renderer.dispose();
 });

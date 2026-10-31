@@ -63,7 +63,7 @@ it('rejects pixel readback formats whose memory layout is not RGBA8', async () =
 it('destroys the staging buffer when pixel readback fails', async () => {
   const destroy = jest.fn();
   const buffer = {
-    mapAsync: jest.fn().mockRejectedValue(new Error('map failed')),
+    mapAsync: jest.fn<() => Promise<void>>().mockRejectedValue(new Error('map failed')),
     mapState: 'unmapped',
     destroy,
   };

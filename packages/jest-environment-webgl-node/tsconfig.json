@@ -1,4 +1,5 @@
 {
   "extends": "../../tsconfig.node.json",
-  "exclude": ["src/**/*.test.ts", "dist", "node_modules"]
+  "include": ["src/**/*", "globals.d.ts"],
+  "exclude": ["dist", "node_modules"]
 }

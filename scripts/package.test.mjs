@@ -14,7 +14,7 @@ function run(command, args, cwd) {
   return result.stdout;
 }
 
-test('packed WebGPU globals retain their types for ESM and CommonJS consumers', async () => {
+void test('packed WebGPU globals retain their types for ESM and CommonJS consumers', async () => {
   const fixture = await mkdtemp(join(tmpdir(), 'jest-gpu-package-'));
   try {
     const packageDir = join(root, 'packages/jest-environment-webgpu-node');

@@ -21,11 +21,11 @@ jobs:
         os: [macos-latest, ubuntu-latest]
         floor: [false]
         include:
-          # The supported floor: engines.node >=22.12 and the jest >=29 peer range. `floor` differs
+          # The supported floor: engines.node >=26 and the jest >=29 peer range. `floor` differs
           # from the base combinations so this is added as a new leg rather than merged into one.
           - os: ubuntu-latest
             floor: true
-            node: '22'
+            node: '26'
             jest: '29'
     env:
       # Software rasterizers on GPU-less runners: Mesa llvmpipe for WebGL, Dawn's Vulkan backend on lavapipe for WebGPU.

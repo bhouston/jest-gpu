@@ -30,7 +30,7 @@ const domShims = (
       callback(global.performance.now());
     }, 16);
     animationFrames.set(handle, global.clearTimeout);
-    (handle as NodeJS.Timeout).unref?.();
+    handle.unref?.();
     return handle;
   };
   const cancelAnimationFrame = (handle: TimerHandle): void => {
@@ -113,7 +113,7 @@ export default class WebgpuEnvironment extends TestEnvironment {
     // sandbox its own proxy instead; `Reflect.get(target, key, target)` keeps Node's private-field
     // getters (hardwareConcurrency, userAgent, ...) working through it.
     const gpu = create(this.#dawnOptions ?? []);
-    const host = (global.navigator ?? {}) as object;
+    const host = global.navigator ?? {};
     this.#hostNavigator = Object.getOwnPropertyDescriptor(global, 'navigator');
     Object.defineProperty(global, 'navigator', {
       value: new Proxy(host, {

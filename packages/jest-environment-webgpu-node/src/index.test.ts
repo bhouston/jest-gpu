@@ -2,11 +2,14 @@ import { expect, it, jest } from '@jest/globals';
 import WebgpuEnvironment, { HeadlessCanvas } from './index.js';
 
 const makeEnv = async (testEnvironmentOptions: Record<string, unknown> = { dawnOptions: [] }) => {
-  const env = new WebgpuEnvironment({ projectConfig: { testEnvironmentOptions } as any, globalConfig: {} as any }, {
-    console,
-    docblockPragmas: {},
-    testPath: import.meta.filename,
-  } as any);
+  const env = new WebgpuEnvironment(
+    { projectConfig: { testEnvironmentOptions } as any, globalConfig: {} as any },
+    {
+      console,
+      docblockPragmas: {},
+      testPath: import.meta.filename,
+    },
+  );
   await env.setup();
   return env;
 };
@@ -128,11 +131,14 @@ it('gives the sandbox its own navigator without touching the host, and defaults 
 });
 
 it('removes navigator on teardown when the sandbox had none', async () => {
-  const env = new WebgpuEnvironment({ projectConfig: { testEnvironmentOptions: {} } as any, globalConfig: {} as any }, {
-    console,
-    docblockPragmas: {},
-    testPath: import.meta.filename,
-  } as any);
+  const env = new WebgpuEnvironment(
+    { projectConfig: { testEnvironmentOptions: {} } as any, globalConfig: {} as any },
+    {
+      console,
+      docblockPragmas: {},
+      testPath: import.meta.filename,
+    },
+  );
   const global = env.global as any;
   delete global.navigator; // as on Node versions without a navigator global
   await env.setup();

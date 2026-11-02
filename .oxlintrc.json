@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "options": { "typeAware": true },
   "categories": { "correctness": "error", "suspicious": "warn" },
   "plugins": ["eslint", "typescript", "oxc", "unicorn"],
   "rules": { "eslint/no-underscore-dangle": "off" },

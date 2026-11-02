@@ -23,10 +23,11 @@ type TestGlobal = Omit<typeof globalThis, 'document'> & {
 };
 
 function makeEnv(testEnvironmentOptions: Record<string, unknown> = {}) {
-  return new WebglEnvironment(
-    { projectConfig: { testEnvironmentOptions }, globalConfig: {} } as any,
-    { console, docblockPragmas: {}, testPath: import.meta.filename } as any,
-  );
+  return new WebglEnvironment({ projectConfig: { testEnvironmentOptions }, globalConfig: {} } as any, {
+    console,
+    docblockPragmas: {},
+    testPath: import.meta.filename,
+  });
 }
 
 describe('WebglEnvironment', () => {
@@ -111,10 +112,11 @@ describe('WebglEnvironment', () => {
 
     await env.teardown();
 
-    const fresh = new TestEnvironment(
-      { projectConfig: { testEnvironmentOptions: {} }, globalConfig: {} } as any,
-      { console, docblockPragmas: {}, testPath: import.meta.filename } as any,
-    );
+    const fresh = new TestEnvironment({ projectConfig: { testEnvironmentOptions: {} }, globalConfig: {} } as any, {
+      console,
+      docblockPragmas: {},
+      testPath: import.meta.filename,
+    });
     expect((fresh.global as unknown as { document?: unknown }).document).toBeUndefined();
     expect((env.global as unknown as { document?: unknown }).document).toBeUndefined();
     expect((env.global as unknown as { window?: unknown }).window).toBeUndefined();

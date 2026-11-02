@@ -22,10 +22,10 @@ it('renders a fullscreen effect with vgpu and reads the target back', async () =
   expect(data[corner + 3]).toBe(255);
 
   const center = ((size / 2) * size + size / 2) * 4;
-  expect(data[center]!).toBeGreaterThan(110);
-  expect(data[center]!).toBeLessThan(145);
-  expect(data[center + 1]!).toBeGreaterThan(110);
-  expect(data[center + 1]!).toBeLessThan(145);
+  expect(data[center]).toBeGreaterThan(110);
+  expect(data[center]).toBeLessThan(145);
+  expect(data[center + 1]).toBeGreaterThan(110);
+  expect(data[center + 1]).toBeLessThan(145);
   expect(data[center + 2]).toBe(0);
   expect(data[center + 3]).toBe(255);
   gpu.dispose();

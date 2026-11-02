@@ -7,16 +7,19 @@ let device: GPUDevice;
 let GPUTextureUsage: typeof globalThis.GPUTextureUsage;
 
 beforeAll(async () => {
-  env = new WebgpuEnvironment({ projectConfig: { testEnvironmentOptions: {} } as any, globalConfig: {} as any }, {
-    console,
-    docblockPragmas: {},
-    testPath: import.meta.filename,
-  } as any);
+  env = new WebgpuEnvironment(
+    { projectConfig: { testEnvironmentOptions: {} } as any, globalConfig: {} as any },
+    {
+      console,
+      docblockPragmas: {},
+      testPath: import.meta.filename,
+    },
+  );
   await env.setup();
   const global = env.global as any;
   GPUTextureUsage = global.GPUTextureUsage;
   const navigator = global.navigator as Navigator;
-  device = await (await navigator.gpu!.requestAdapter())!.requestDevice();
+  device = await (await navigator.gpu.requestAdapter())!.requestDevice();
 });
 
 afterAll(async () => {

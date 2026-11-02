@@ -45,7 +45,7 @@
     "jest-environment-node": "^30.5.2",
     "lint-staged": "^17.5.1",
     "oxfmt": "^0.75.0",
-    "oxlint": "^1.83.0",
+    "oxlint": "^1.90.0",
     "oxlint-tsgolint": "^7.0.2005",
     "publint": "^0.3.24",
     "semantic-release": "^25.0.9",

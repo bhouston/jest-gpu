@@ -1,8 +1,9 @@
 {
   "recommendations": [
-    "orta.vscode-jest",
     "oxc.oxc-vscode",
-    "github.vscode-github-actions",
-    "typescriptteam.native-preview"
-  ]
+    "typescriptteam.native-preview",
+    "orta.vscode-jest",
+    "github.vscode-github-actions"
+  ],
+  "unwantedRecommendations": ["esbenp.prettier-vscode", "dbaeumer.vscode-eslint", "biomejs.biome"]
 }

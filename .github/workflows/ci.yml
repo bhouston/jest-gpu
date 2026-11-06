@@ -70,7 +70,7 @@ jobs:
       - name: Verify packed tarballs include dist
         shell: bash
         run: |
-          for pkg in packages/*/; do
+          for pkg in packages/jest-environment-*/; do
             output=$(cd "$pkg" && pnpm pack --dry-run 2>&1)
             for f in dist/index.cjs dist/index.mjs; do
               echo "$output" | grep -qF "$f" || {

@@ -24,6 +24,8 @@ pnpm add -D jest jest-environment-webgl-node
 
 For WebGPU, install `jest-environment-webgpu-node` instead. Install both if you test both APIs.
 
+pnpm 12 lists `@onirenaud/node-webgl` and `webgpu` under "Ignored build scripts" when you install them. In a fresh project the tests below passed without approving those scripts. If a context fails to create, approve them with `pnpm approve-builds`.
+
 ## Simplest setup: CommonJS
 
 Set the environment in your Jest config. No transform and no extra flags are needed.

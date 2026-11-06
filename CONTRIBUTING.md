@@ -52,7 +52,8 @@ All packages under `packages/` are released together in lockstep, sharing a
 single version stream computed once at the repo root and tagged `v<version>`.
 If there are no releasable changes, it publishes nothing. The source package
 version is not bumped by the release bot. Pass `-f dry_run=true` to validate a
-release without publishing. See [release setup](docs/releasing.md) for npm and
-GitHub configuration and the version baseline.
+release without publishing.
 
 Do not run `pnpm release` or `npm publish` locally as part of normal development.
+
+See [RELEASING.md](RELEASING.md) for release setup, recovery, and repository specifics.

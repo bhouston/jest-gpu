@@ -1,6 +1,5 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "singleQuote": true,
-  "printWidth": 120,
-  "ignorePatterns": ["packages/docs/docs/api/**", "packages/docs/build/**", "packages/docs/.docusaurus/**"]
+  "printWidth": 120
 }

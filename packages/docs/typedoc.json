@@ -1,8 +1,7 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["../jest-environment-webgl-node/src/index.ts", "../jest-environment-webgpu-node/src/index.ts"],
+  "entryPoints": ["../jest-environment-webgl-node", "../jest-environment-webgpu-node"],
   "packagesRequiringDocumentation": ["jest-environment-webgl-node", "jest-environment-webgpu-node"],
-  "tsconfig": "tsconfig.typedoc.json",
   "out": "docs/api",
   "plugin": ["typedoc-plugin-markdown"],
   "name": "API reference",
@@ -40,5 +39,10 @@
     "TypeAlias"
   ],
   "treatValidationWarningsAsErrors": true,
-  "entryFileName": "index"
+  "entryFileName": "index",
+  "entryPointStrategy": "packages",
+  "packageOptions": {
+    "entryPoints": ["src/index.ts"],
+    "readme": "none"
+  }
 }

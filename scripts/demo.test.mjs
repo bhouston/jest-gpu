@@ -21,7 +21,9 @@ async function temporaryProject() {
 }
 
 function run(path, executable, arguments_, env = process.env) {
-  const result = spawnSync(executable, arguments_, { cwd: path, encoding: 'utf8', env, timeout: 120_000 });
+  // npm is npm.cmd on Windows, which needs a shell.
+  const shell = executable === 'npm' && process.platform === 'win32';
+  const result = spawnSync(executable, arguments_, { cwd: path, encoding: 'utf8', env, shell, timeout: 120_000 });
   assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
   return result;
 }

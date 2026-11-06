@@ -23,7 +23,7 @@ This is the single workflow standard for human contributors, Claude, and Codex.
    Install with `pnpm install --frozen-lockfile` using the Node version in
    `.nvmrc`. Coverage must be at least 95% for statements, branches, functions,
    and lines. The native GPU packages are real dependencies, so tests need a
-   GPU or a software rasterizer (Metal on macOS, Mesa llvmpipe on Linux).
+   GPU or a software rasterizer (Metal on macOS, Mesa llvmpipe on Linux, WARP on Windows).
    The dependency audit is advisory in CI, including release validation: failures
    produce a warning without blocking the other checks. Review and report audit
    findings; they do not need to be suppressed to merge a change.

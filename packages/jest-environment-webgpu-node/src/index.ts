@@ -69,6 +69,11 @@ export default class WebgpuEnvironment extends TestEnvironment {
   #dawnOptions: string[] | undefined;
   #animationFrames = new Map<TimerHandle, typeof clearTimeout>();
 
+  /**
+   * Creates the environment; Jest calls this once per test file.
+   * @param config - Jest's environment config; `testEnvironmentOptions.dawnOptions` is read from it.
+   * @param context - Jest's environment context.
+   */
   constructor(config: JestEnvironmentConfig, context: EnvironmentContext) {
     // jest-environment-node assigns every `testEnvironmentOptions` entry onto the sandbox global, so
     // strip this environment's own option first to keep `dawnOptions` off `globalThis`.
@@ -99,6 +104,7 @@ export default class WebgpuEnvironment extends TestEnvironment {
   // Jest's sandboxed CJS loader to load an ESM-only dependency (jestjs/jest#15716). This method
   // itself runs outside that sandbox, through Jest's own environment setup, where Node's native
   // `import()` always works.
+  /** Loads Dawn, then installs `navigator.gpu`, the `GPU*` globals, the DOM shims and `createCanvas` on the sandbox. */
   override async setup(): Promise<void> {
     await super.setup();
     const { create, globals } = await import('webgpu');
@@ -126,6 +132,7 @@ export default class WebgpuEnvironment extends TestEnvironment {
     });
   }
 
+  /** Cancels pending animation frames and removes everything `setup()` installed from the sandbox. */
   override async teardown(): Promise<void> {
     const global = this.global as unknown as Record<string, unknown>;
     for (const [handle, clear] of this.#animationFrames) clear(handle);

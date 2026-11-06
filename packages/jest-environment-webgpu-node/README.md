@@ -3,6 +3,7 @@
   <a href="https://www.npmtrends.com/jest-environment-webgpu-node"><img src="https://img.shields.io/npm/dw/jest-environment-webgpu-node.svg" alt="npm downloads"></a>
   <a href="https://codecov.io/gh/bhouston/jest-gpu"><img src="https://codecov.io/gh/bhouston/jest-gpu/branch/main/graph/badge.svg" alt="coverage"></a>
   <a href="https://discord.gg/fwupDN493R"><img src="https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord" alt="discord chat"></a>
+  <a href="https://jest-gpu.ben3d.ca/"><img src="https://img.shields.io/badge/docs-read-blue?style=flat" alt="documentation"></a>
 </p>
 <br/>
 
@@ -22,6 +23,8 @@ Real, headless WebGPU inside Jest, powered by Google's Dawn through the
 same tests in a browser, see [the write-up](https://ben3d.ca/blog/native-gpu-testing-for-vitest-and-jest).
 
 Part of [jest-gpu](https://github.com/bhouston/jest-gpu), which also provides the WebGL environment.
+
+[Read the Docs to Learn More](https://jest-gpu.ben3d.ca/docs/webgpu/) for the full WebGPU guide, CommonJS and ESM setup, CI configuration and the API reference.
 
 ## Install
 
@@ -103,7 +106,7 @@ test file itself imports an ESM-only library, such as `three/webgpu`.
 
 ## Using Vitest?
 
-The equivalent package for Vitest is
+The equivalent package for Vitest (see the [vitest-gpu docs](https://vitest-gpu.ben3d.ca/)) is
 [`vitest-environment-webgpu-node`](https://github.com/bhouston/vitest-gpu/tree/main/packages/vitest-environment-webgpu-node)
 from [vitest-gpu](https://github.com/bhouston/vitest-gpu).
 

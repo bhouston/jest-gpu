@@ -1,0 +1,21 @@
+{
+  "name": "jest-gpu",
+  "short_name": "jest-gpu",
+  "description": "Real WebGL and WebGPU tests in plain Jest, with no browser. Jest environments that put a GPU-backed context on the test global.",
+  "start_url": ".",
+  "display": "browser",
+  "background_color": "#11151d",
+  "theme_color": "#11151d",
+  "icons": [
+    {
+      "src": "img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

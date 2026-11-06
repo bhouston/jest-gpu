@@ -63,11 +63,14 @@ jobs:
       - name: Flag audit findings
         if: steps.audit.outcome == 'failure'
         run: echo '::warning::Dependency audit found vulnerabilities or could not reach the registry. Review the audit step.'
+      - name: Build documentation
+        if: runner.os == 'Linux' && !matrix.node
+        run: pnpm docs:build
       - run: pnpm package:check
       - name: Verify packed tarballs include dist
         shell: bash
         run: |
-          for pkg in packages/*/; do
+          for pkg in packages/jest-environment-*/; do
             output=$(cd "$pkg" && pnpm pack --dry-run 2>&1)
             for f in dist/index.cjs dist/index.mjs; do
               echo "$output" | grep -qF "$f" || {

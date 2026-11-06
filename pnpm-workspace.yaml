@@ -2,6 +2,7 @@ packages:
   - 'packages/*'
   - 'demo'
 allowBuilds:
+  core-js: false
   '@onirenaud/node-webgl': true
   '@vgpu/adapter-node': false
   webgpu: true
@@ -10,3 +11,5 @@ allowBuilds:
   unrs-resolver: true
 overrides:
   '@modelcontextprotocol/server': ^2.3.0
+  serialize-javascript: ^7.0.3
+  tinypool: ^2.1.2

@@ -151,11 +151,21 @@ function localFetch(baseDir: string, nativeFetch: typeof fetch): typeof fetch {
   };
 }
 
+/**
+ * Jest environment that puts real headless WebGL 1 and 2 (ANGLE via `@onirenaud/node-webgl`) and a browser-like
+ * DOM on the sandbox global. Each test file gets a fresh document and animation-frame queue. Set options under
+ * `testEnvironmentOptions`; see {@link WebglNodeOptions}.
+ */
 export default class WebglEnvironment extends TestEnvironment {
   private readonly added: string[] = [];
   private readonly animationFrames = new Map<ReturnType<typeof setTimeout>, typeof clearTimeout>();
   private readonly canvases = new Set<nodeWebGL.Canvas>();
 
+  /**
+   * Creates the environment and installs the DOM; Jest calls this once per test file.
+   * @param config - Jest's environment config; the WebGL options are read from `testEnvironmentOptions`.
+   * @param context - Jest's environment context.
+   */
   constructor(config: JestEnvironmentConfig, context: EnvironmentContext) {
     const options = config.projectConfig.testEnvironmentOptions as WebglNodeOptions;
     super(environmentConfig(config), context);
@@ -227,6 +237,7 @@ export default class WebglEnvironment extends TestEnvironment {
     g.fetch = domOptions.fetch === false ? nativeFetch : localFetch(domOptions.baseDir ?? process.cwd(), nativeFetch);
   }
 
+  /** Cancels pending animation frames, disposes canvases the environment created and removes the installed globals. */
   override async teardown(): Promise<void> {
     const g = this.global as unknown as Sandbox;
     for (const [id, clear] of this.animationFrames) clear(id);

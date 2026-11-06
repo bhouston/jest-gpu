@@ -48,6 +48,7 @@ Publishing is not atomic. If a run fails part way, compare the registry versions
 
 - `jest-environment-webgl-node` (npm)
 - `jest-environment-webgpu-node` (npm)
+- The website at `jest-gpu.ben3d.ca`, built from `packages/docs`. The `@jest-gpu/docs` package is private and never published.
 
 The two packages release in lockstep at one version. Each package's tarball is attached to the GitHub Release. Before publishing, the release fails if either package already has the computed version on npm.
 

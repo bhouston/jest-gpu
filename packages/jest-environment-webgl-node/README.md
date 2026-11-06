@@ -3,6 +3,7 @@
   <a href="https://www.npmtrends.com/jest-environment-webgl-node"><img src="https://img.shields.io/npm/dw/jest-environment-webgl-node.svg" alt="npm downloads"></a>
   <a href="https://codecov.io/gh/bhouston/jest-gpu"><img src="https://codecov.io/gh/bhouston/jest-gpu/branch/main/graph/badge.svg" alt="coverage"></a>
   <a href="https://discord.gg/fwupDN493R"><img src="https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord" alt="discord chat"></a>
+  <a href="https://jest-gpu.ben3d.ca/"><img src="https://img.shields.io/badge/docs-read-blue?style=flat" alt="documentation"></a>
 </p>
 <br/>
 
@@ -23,6 +24,8 @@ faster than the same tests in a browser, see [the write-up](https://ben3d.ca/blo
 Powered by [`@onirenaud/node-webgl`](https://github.com/RenaudRohlinger/node-webgl) (Chrome's ANGLE, statically linked).
 
 Part of [jest-gpu](https://github.com/bhouston/jest-gpu), which also provides the WebGPU environment.
+
+[Read the Docs to Learn More](https://jest-gpu.ben3d.ca/docs/webgl/) for the full WebGL guide, CommonJS and ESM setup, CI configuration and the API reference.
 
 ## Install
 
@@ -90,7 +93,7 @@ On Linux CI install Mesa (`apt-get install libegl1 libgles2 libgl1-mesa-dri`) an
 
 ## Using Vitest?
 
-The equivalent package for Vitest is
+The equivalent package for Vitest (see the [vitest-gpu docs](https://vitest-gpu.ben3d.ca/)) is
 [`vitest-environment-webgl-node`](https://github.com/bhouston/vitest-gpu/tree/main/packages/vitest-environment-webgl-node)
 from [vitest-gpu](https://github.com/bhouston/vitest-gpu).
 

@@ -63,6 +63,9 @@ jobs:
       - name: Flag audit findings
         if: steps.audit.outcome == 'failure'
         run: echo '::warning::Dependency audit found vulnerabilities or could not reach the registry. Review the audit step.'
+      - name: Build documentation
+        if: runner.os == 'Linux' && !matrix.node
+        run: pnpm docs:build
       - run: pnpm package:check
       - name: Verify packed tarballs include dist
         shell: bash

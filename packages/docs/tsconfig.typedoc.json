@@ -1,0 +1,5 @@
+{
+  "extends": "../../tsconfig.node.json",
+  "compilerOptions": { "lib": ["ES2024", "ESNext.Disposable", "DOM"], "rootDir": "..", "noEmit": true },
+  "include": ["../jest-environment-webgl-node/src/index.ts", "../jest-environment-webgpu-node/src/index.ts"]
+}

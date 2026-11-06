@@ -72,10 +72,18 @@ void test('the documented copy commands replace workspace dependency versions', 
   assert.equal(manifest.devDependencies['jest-environment-webgpu-node'], 'latest');
 });
 
-void test('the README TypeScript quickstarts type-check and run', async () => {
-  const readme = await readFile(join(repository, 'README.md'), 'utf8');
-  const webgpu = readme.slice(readme.indexOf('## Render with WebGPU'), readme.indexOf('## Render with WebGL'));
-  const webgl = readme.slice(readme.indexOf('## Render with WebGL'), readme.indexOf('## ESM note'));
+void test('the documentation TypeScript quickstarts type-check and run', async () => {
+  const docs = join(repository, 'packages/docs/docs');
+  const webgpuPage = await readFile(join(docs, 'webgpu.md'), 'utf8');
+  const webgpu = webgpuPage.slice(
+    webgpuPage.indexOf('## A complete three.js test'),
+    webgpuPage.indexOf('## ESM and CommonJS'),
+  );
+  const gettingStarted = await readFile(join(docs, 'getting-started.md'), 'utf8');
+  const webgl = gettingStarted.slice(
+    gettingStarted.indexOf('## ESM and TypeScript'),
+    gettingStarted.indexOf('## Next steps'),
+  );
   const tsconfig = JSON.parse(webgpu.match(/```json\n([\s\S]*?)```/)?.[1] ?? '');
 
   for (const [name, section] of [

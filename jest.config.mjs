@@ -4,7 +4,7 @@ import { projects as demoProjects } from './demo/jest.config.mjs';
 /** @type {import('jest').Config} */
 export default {
   ...project,
-  projects: ['<rootDir>/packages/*', ...demoProjects],
+  projects: ['<rootDir>/packages/jest-environment-*', ...demoProjects],
   // scripts/workflow.test.mjs is a node:test suite (run via `pnpm test:workflow`), not a Jest
   // suite; Jest's default testMatch otherwise picks it up and fails with "must contain at least
   // one test" since it has no Jest `test()` calls.

@@ -1,19 +1,27 @@
+<p align="center">
+  <a href="https://npmjs.com/package/jest-environment-webgpu-node"><img src="https://img.shields.io/npm/v/jest-environment-webgpu-node.svg" alt="npm package"></a>
+  <a href="https://www.npmtrends.com/jest-environment-webgpu-node"><img src="https://img.shields.io/npm/dw/jest-environment-webgpu-node.svg" alt="npm downloads"></a>
+  <a href="https://codecov.io/gh/bhouston/jest-gpu"><img src="https://codecov.io/gh/bhouston/jest-gpu/branch/main/graph/badge.svg" alt="coverage"></a>
+  <a href="https://discord.gg/fwupDN493R"><img src="https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord" alt="discord chat"></a>
+</p>
+<br/>
+
 # jest-environment-webgpu-node
 
-[![npm version][npm-badge]][npm-url]
-[![npm downloads][downloads-badge]][npm-url]
-[![Coverage][coverage-badge]][coverage-url]
-[![Discord][discord-badge]][discord-url]
+> Real WebGPU tests in plain Jest, with no browser.
 
-Real, headless WebGPU inside Jest, with no browser. Native GPU testing runs up to 2.4x faster
-than the same tests in a browser — see
-[the write-up](https://ben3d.ca/blog/native-gpu-testing-for-vitest-and-jest) for details.
-Powered by Google's Dawn through the
-[`webgpu`](https://github.com/dawn-gpu/node-webgpu) npm package.
+- 🖥️ Real WebGPU via Dawn
+- 🚫 No Browser or Mocks
+- 🧩 Headless Canvas Included
+- 🔧 Dawn Backend Options
+- 📦 Dual ESM and CommonJS
+- ⚡ Up to 2.4x Faster Than Browsers
 
-The environment puts `navigator.gpu` and every `GPU*` class and constant (`GPUBufferUsage`,
-`GPUShaderStage`, ...) on the test's global object before each test file and removes them
-afterwards.
+Real, headless WebGPU inside Jest, powered by Google's Dawn through the
+[`webgpu`](https://github.com/dawn-gpu/node-webgpu) npm package. Native GPU testing runs up to 2.4x faster than the
+same tests in a browser, see [the write-up](https://ben3d.ca/blog/native-gpu-testing-for-vitest-and-jest).
+
+Part of [jest-gpu](https://github.com/bhouston/jest-gpu), which also provides the WebGL environment.
 
 ## Install
 
@@ -53,7 +61,7 @@ sudo apt-get update && sudo apt-get install -y libegl1 libgles2 libgl1-mesa-dri 
 export LIBGL_ALWAYS_SOFTWARE=1
 ```
 
-This repo's own [CI workflow](../../.github/workflows/ci.yml) does exactly this, so WebGPU tests run
+This repo's own [CI workflow](https://github.com/bhouston/jest-gpu/blob/main/.github/workflows/ci.yml) does exactly this, so WebGPU tests run
 for real (not mocked) on `ubuntu-latest` on every PR. macOS runners use Dawn's Metal backend and need no
 extra setup.
 
@@ -99,18 +107,14 @@ The equivalent package for Vitest is
 [`vitest-environment-webgpu-node`](https://github.com/bhouston/vitest-gpu/tree/main/packages/vitest-environment-webgpu-node)
 from [vitest-gpu](https://github.com/bhouston/vitest-gpu).
 
-## Author
+## Contribution
 
-Created by [Ben Houston](https://ben3d.ca) and sponsored by [Land of Assets](https://landofassets.com).
+See [Contributing Guide](https://github.com/bhouston/jest-gpu/blob/main/CONTRIBUTING.md).
 
 ## License
 
 MIT
 
-[npm-badge]: https://img.shields.io/npm/v/jest-environment-webgpu-node.svg
-[npm-url]: https://www.npmjs.com/package/jest-environment-webgpu-node
-[downloads-badge]: https://img.shields.io/npm/dm/jest-environment-webgpu-node.svg
-[coverage-badge]: https://codecov.io/gh/bhouston/jest-gpu/branch/main/graph/badge.svg
-[coverage-url]: https://codecov.io/gh/bhouston/jest-gpu
-[discord-badge]: https://img.shields.io/badge/Discord-Join%20Chat-5865F2?logo=discord&logoColor=white
-[discord-url]: https://discord.gg/fwupDN493R
+## Author
+
+[Ben Houston](https://ben3d.ca), Sponsored by [Land of Assets](https://landofassets.com).

@@ -1,14 +1,35 @@
+<p align="center">
+  <a href="https://npmjs.com/package/jest-environment-webgpu-node"><img src="https://img.shields.io/npm/v/jest-environment-webgpu-node.svg" alt="npm package"></a>
+  <a href="https://www.npmtrends.com/jest-environment-webgpu-node"><img src="https://img.shields.io/npm/dw/jest-environment-webgpu-node.svg" alt="npm downloads"></a>
+  <a href="https://codecov.io/gh/bhouston/jest-gpu"><img src="https://codecov.io/gh/bhouston/jest-gpu/branch/main/graph/badge.svg" alt="coverage"></a>
+  <a href="https://discord.gg/fwupDN493R"><img src="https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord" alt="discord chat"></a>
+</p>
+<br/>
+
 # jest-gpu
 
-[![Tests][tests-badge]][tests-url]
-[![Coverage][coverage-badge]][coverage-url]
-[![Discord][discord-badge]][discord-url]
+> Real WebGL and WebGPU tests in plain Jest, with no browser.
 
-Run real WebGL and WebGPU code inside plain Jest, with no browser, no Playwright and no mocks.
-Native GPU testing runs up to 2.4x faster than the same tests in a browser — see
+- 🖥️ Real GPU in Node
+- 🚫 No Browser or Mocks
+- 🎨 WebGL 1, 2 and WebGPU
+- 📦 Dual ESM and CommonJS
+- ⚡ Up to 2.4x Faster Than Browsers
+
+Two Jest environments put a GPU-backed context on the test's sandbox global, so three.js, Babylon.js and plain
+WebGL/WebGPU code run unchanged. Native GPU testing runs up to 2.4x faster than the same tests in a browser, see
 [the write-up](https://ben3d.ca/blog/native-gpu-testing-for-vitest-and-jest) for details.
-Two Jest environments put a GPU-backed context on the test's sandbox global, so three.js,
-Babylon.js and plain WebGL/WebGPU code run unchanged.
+
+## Packages
+
+| Package                                                                 | Version (click for changelogs)                                                                                                                                    |
+| ----------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`jest-environment-webgpu-node`](packages/jest-environment-webgpu-node) | [![jest-environment-webgpu-node version](https://img.shields.io/npm/v/jest-environment-webgpu-node.svg?label=%20)](https://github.com/bhouston/jest-gpu/releases) |
+| [`jest-environment-webgl-node`](packages/jest-environment-webgl-node)   | [![jest-environment-webgl-node version](https://img.shields.io/npm/v/jest-environment-webgl-node.svg?label=%20)](https://github.com/bhouston/jest-gpu/releases)   |
+
+Using Vitest? Equivalent packages for Vitest live in [vitest-gpu](https://github.com/bhouston/vitest-gpu):
+[`vitest-environment-webgpu-node`](https://github.com/bhouston/vitest-gpu/tree/main/packages/vitest-environment-webgpu-node)
+and [`vitest-environment-webgl-node`](https://github.com/bhouston/vitest-gpu/tree/main/packages/vitest-environment-webgl-node).
 
 ## Render with WebGPU
 
@@ -184,25 +205,14 @@ pnpm test
 pnpm test:coverage
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the branch, commit and release workflow.
+## Contribution
 
-## Using Vitest?
-
-Equivalent packages for Vitest live in [vitest-gpu](https://github.com/bhouston/vitest-gpu):
-[`vitest-environment-webgpu-node`](https://github.com/bhouston/vitest-gpu/tree/main/packages/vitest-environment-webgpu-node)
-and [`vitest-environment-webgl-node`](https://github.com/bhouston/vitest-gpu/tree/main/packages/vitest-environment-webgl-node).
-
-## Author
-
-Created by [Ben Houston](https://ben3d.ca) and sponsored by [Land of Assets](https://landofassets.com).
+See [Contributing Guide](CONTRIBUTING.md).
 
 ## License
 
 MIT
 
-[tests-badge]: https://github.com/bhouston/jest-gpu/actions/workflows/ci.yml/badge.svg
-[tests-url]: https://github.com/bhouston/jest-gpu/actions/workflows/ci.yml
-[coverage-badge]: https://codecov.io/gh/bhouston/jest-gpu/branch/main/graph/badge.svg
-[coverage-url]: https://codecov.io/gh/bhouston/jest-gpu
-[discord-badge]: https://img.shields.io/badge/Discord-Join%20Chat-5865F2?logo=discord&logoColor=white
-[discord-url]: https://discord.gg/fwupDN493R
+## Author
+
+[Ben Houston](https://ben3d.ca), Sponsored by [Land of Assets](https://landofassets.com).

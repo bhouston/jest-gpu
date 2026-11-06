@@ -205,6 +205,10 @@ pnpm test
 pnpm test:coverage
 ```
 
+## Releases
+
+See [RELEASING.md](RELEASING.md) for how releases are published and [GitHub Releases](https://github.com/bhouston/jest-gpu/releases) for changes.
+
 ## Contribution
 
 See [Contributing Guide](CONTRIBUTING.md).

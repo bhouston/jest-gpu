@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
         floor: [false]
         include:
           # The supported floor: engines.node >=22 and the jest >=29 peer range. `floor` differs
@@ -65,6 +65,7 @@ jobs:
         run: echo '::warning::Dependency audit found vulnerabilities or could not reach the registry. Review the audit step.'
       - run: pnpm package:check
       - name: Verify packed tarballs include dist
+        shell: bash
         run: |
           for pkg in packages/*/; do
             output=$(cd "$pkg" && pnpm pack --dry-run 2>&1)

@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:cjs": "jest --selectProjects demo-cjs-webgl demo-cjs-webgpu",
     "tsc": "tsc -p tsconfig.json"
   },

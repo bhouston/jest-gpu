@@ -9,7 +9,8 @@ import { test } from 'node:test';
 const root = fileURLToPath(new URL('../', import.meta.url));
 
 function run(command, args, cwd) {
-  const result = spawnSync(command, args, { cwd, encoding: 'utf8' });
+  // npm is npm.cmd on Windows, which needs a shell.
+  const result = spawnSync(command, args, { cwd, encoding: 'utf8', shell: process.platform === 'win32' });
   assert.equal(result.status, 0, `${command} ${args.join(' ')}\n${result.stdout}\n${result.stderr}`);
   return result.stdout;
 }

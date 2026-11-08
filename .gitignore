@@ -7,3 +7,7 @@ publish
 packages/docs/build/
 packages/docs/.docusaurus/
 packages/docs/docs/api/
+
+# Agent tooling
+.claude/
+.codex/
